@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
                        'get a clean and nice code, and also helping with the documentation of ' \
                        'the operations.'
 
-  spec.files         = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.files         = Dir["{lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   spec.add_dependency 'rails', '>= 5'
 end
