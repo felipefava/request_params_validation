@@ -1,0 +1,59 @@
+require 'request_params_validation/params/constants'
+require 'request_params_validation/params/validator'
+
+module RequestParamsValidation
+  module Params
+    include Constants
+
+    def self.validate!(definition, params)
+      definition.each do |param_definition|
+        validate_and_coerce_param(param_definition, params)
+      end
+
+      params
+    end
+
+    def self.filter!(definition, params)
+      extra_keys = [:controller, :action] # Added by Rails
+
+      params = filter_params(definition, params, extra_keys)
+
+      params.permit! if params.is_a?(ActionController::Parameters)
+
+      params
+    end
+
+    def self.validate_and_coerce_param(param_definition, params)
+      key = param_definition.key
+      value = params[key]
+
+      value = Validator.new(param_definition, value).validate_and_coerce
+
+      params[key] = value
+    end
+    private_class_method :validate_and_coerce_param
+
+    def self.filter_params(definition, params, extra_keys = [])
+      params_keys = definition.map do |param_definition|
+        key = param_definition.key
+
+        if param_definition.sub_definition
+          filter_params(param_definition.sub_definition, params[key])
+        end
+
+        key
+      end.compact
+
+      params_keys += extra_keys
+
+      if params.is_a?(Array)
+        params.map { |param| param.slice!(*params_keys) }
+      else
+        params.slice!(*params_keys)
+      end
+
+      params
+    end
+    private_class_method :filter_params
+  end
+end
