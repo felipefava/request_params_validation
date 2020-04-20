@@ -14,13 +14,11 @@ module RequestParamsValidation
     end
 
     def self.filter!(definition, params)
-      extra_keys = [:controller, :action] # Added by Rails
+      extra_keys = [:controller, :action] # Keys added by Rails
 
-      params = filter_params(definition, params, extra_keys)
-
-      params.permit! if params.is_a?(ActionController::Parameters)
-
-      params
+      filter_params(definition, params, extra_keys).tap do |params|
+        params.permit! if params.is_a?(ActionController::Parameters)
+      end
     end
 
     def self.validate_and_coerce_param(param_definition, params)

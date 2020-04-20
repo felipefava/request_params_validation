@@ -18,7 +18,7 @@ module RequestParamsValidation
 
         def default_invalid_length_message(min, max)
           message = if param.element_of_array?
-                      'All elements of the array should have a length'
+                      'All elements should have a length'
                     else
                       'Length shoud be'
                     end
