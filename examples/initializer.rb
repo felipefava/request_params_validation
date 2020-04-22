@@ -78,7 +78,7 @@ RequestParamsValidation.configure do |config|
 
   # Extension configuration goes here. Here you can extend behaviours and
   # default values of the gem.
-  config.extend do |extend|
+  config.extends do |extend|
 
     # Set a module with all your custom types you want the gem to manage.
     # For example, if you want to add a custom type named "cellphone", you just need to
@@ -196,7 +196,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::MissingParameterError.
     #
-    exceptions.on_missing_parameter = RequestParamsValidation::MissingParameterError
+    exception.on_missing_parameter = RequestParamsValidation::MissingParameterError
 
 
     # Here you can set your custom exception class to be raisen when the parameter type
@@ -211,7 +211,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_type = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_type = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter inclusion
@@ -227,7 +227,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_inclusion = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_inclusion = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter length
@@ -244,7 +244,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_length = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_length = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter value
@@ -261,7 +261,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_value_size = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_value_size = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter format
@@ -277,7 +277,7 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_format = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_format = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter validate
@@ -292,6 +292,6 @@ RequestParamsValidation.configure do |config|
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
     #
-    exceptions.on_invalid_parameter_custom_validation = RequestParamsValidation::InvalidParameterValueError
+    exception.on_invalid_parameter_custom_validation = RequestParamsValidation::InvalidParameterValueError
   end
 end

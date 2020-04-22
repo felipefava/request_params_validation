@@ -5,7 +5,7 @@ module RequestParamsValidation
     module Validators
       module Type
         include Params::Types::Validations
-        include RequestParamsValidation.extend.types if RequestParamsValidation.extend.types
+        include RequestParamsValidation.extends.types if RequestParamsValidation.extends.types
 
         def validate_type!
           type = param.type

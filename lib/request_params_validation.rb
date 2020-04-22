@@ -314,7 +314,7 @@ module RequestParamsValidation
 
   # Default way to extend configuration if a block is given, otherwise
   # it returns the ExtensionConfiguration module.
-  def self.extend
+  def self.extends
     if block_given?
       yield ExtensionConfiguration
     else

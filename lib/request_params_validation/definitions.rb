@@ -49,7 +49,7 @@ module RequestParamsValidation
       block_path = block.source_location.first
 
       block_path.sub("#{definitions_path}/", '')
-                .sub("#{definitions_suffix}/", '')
+                .sub("#{definitions_suffix}", '')
                 .sub('.rb', '')
     end
     private_class_method :resource_name_from_block
