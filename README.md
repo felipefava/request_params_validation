@@ -3,7 +3,7 @@ _Request parameters validations, type coercion and filtering for Rails params_
 
 ## Introduction
 Validates the request params outside your controller logic in order to get a clean nice code, and
-also working as code documentation for the operations. It ensure that all endpoint input data is
+also working as code documentation for the operations. It ensure that all endpoints input data is
 right and well formed before it even hits your controller action.
 
 This gem allows you to validate the presence, type, length, format, value and more, of your request
@@ -14,6 +14,7 @@ It is designed to work for any expected params structure, from a simple hash to 
 deeply nested data. It pretends to be a flexible library where you can change and customize
 several options.
 
+It is intended for REST-like RoR APIs.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -30,16 +31,20 @@ gem install request_params_validation
 ```
 
 ## Usage
-To starting using the gem without setting in any configuration is as simple as adding a
+To start using the gem without setting up any configuration is as simple as adding a
 `before_action` with the helper method `validate_params!` and define your expected request
 parameters for your resources actions. If no definition is found for a specific endpoint, the
-default behaviour is to do nothing, that means, no validation will be executed and the params will
+default behavior is to do nothing, that means, no validation will be executed and the params will
 be untouch as if the gem doesn't exist.
 
-This gem comes with a set of configurable options pretending to be a flexible library, here you can
-see all the allowed configurations. However, all config has default values, so if you don't feel
-the need of change any out of the box behaviour,youo dont need to worry. In the future, the plan is
-to add more configurable options and behaviours.
+This gem comes with a set of configurable options pretending to be flexible, and allowing you to
+customize it to your needs. For example, you can change the default helper method `validate_params!`
+for whatever name you want. [Here](#global_configurations) you can see all the allowed
+configurations.
+
+Notice that all configuration option has a default value, and none of them are required, so you
+don't need to setup anything for getting started. In the future, the plan is to continue adding
+more configurable options and features.
 
 ## Example
 Add the `before_action` callback for all actions:
@@ -95,7 +100,7 @@ RequestParamsValidation.define do |users|
   users.action :notify do |notify|
     notify.request do |params|
       params.required :user_id, type: :integer
-      params.required :message, type: :string, length: { min: 10 }
+      params.required :message, type: :string, length: { min: 10, max: 250 }
       params.optional :by, inclusion: %w(email text_msg push), default: :email
     end
   end
@@ -126,6 +131,8 @@ is the only one required, and is the name or key of the parameter. The second ar
 options hash for specifing the extra validations, and the block is for defining nested params.
 
 In the following section we will see all the options validations in-depth look.
+
+### Project Structure
 
 ## Validations & Options
 None of the below options are required, so they can be omitted if you don't need to use them.
@@ -491,20 +498,20 @@ RequestParamsValidation.configure do |config|
 end
 ```
 
-To see a complete initializer file with all the options and description of each of one
-please see [here](./examples/initializer.rb).
+To see a complete initializer file of the configuration with all the options and their description,
+please see [here](./examples/initializer.rb)
 
 ## Future Work
 In the near future the plan is to continue adding features to the gem. In order of
 importance, next changes are:
-- Add tests to all the app
-- Add doc documentation from the definitions
+- Add tests to all the gem
+- Add doc generation from the definitions
 - Add more options to the actions definitions
-- Add handler for responses (i.e. json APIs)
+- Add handler for responses
 
-## Credits
-This gem is strongly inspired in a Ruby Framework named [Angus][https://github.com/moove-it/angus]
-developed by [Moove It][https://moove-it.com/]
+## Acknowledgments
+This gem is strongly inspired in a Ruby framework named [Angus](https://github.com/moove-it/angus)
+developed by [Moove It](https://moove-it.com/)
 
 ## Contributing
 1. Fork it
