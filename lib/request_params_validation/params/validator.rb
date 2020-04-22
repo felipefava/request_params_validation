@@ -10,7 +10,7 @@ module RequestParamsValidation
         include Validators.const_get(validator)
       end
 
-      attr_reader :param, :value, :request_params
+      attr_reader :param, :value
 
       def initialize(param_definition, value)
         @param = param_definition
