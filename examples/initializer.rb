@@ -1,14 +1,11 @@
-require 'request_params_validation/engine'
-require 'request_params_validation/exceptions/validator_errors'
-
-module RequestParamsValidation
+RequestParamsValidation.configure do |config|
 
   # Define helper_method_name for specifing the name for the helper method
   # in charge of validating the request params.
   #
   # The default name is :validate_params!.
-  mattr_accessor :helper_method_name
-  self.helper_method_name = :validate_params!
+  #
+  config.helper_method_name = :validate_params!
 
 
   # Specify the path starting from `Rails.root` where is going
@@ -19,8 +16,8 @@ module RequestParamsValidation
   # That means the params definitions should be in: "#{Rails.root}/definitions/**/*"
   #
   # The default path is :'app/definitions'.
-  mattr_accessor :definitions_path
-  self.definitions_path = :'app/definitions'
+  #
+  config.definitions_path = :'app/definitions'
 
 
   # The on_definition_not_found option accepts two values: :nothing or :raise.
@@ -31,8 +28,8 @@ module RequestParamsValidation
   # - :nothing will do nothing and skip the validation for that controller/action.
   #
   # The default value is :nothing.
-  mattr_accessor :on_definition_not_found
-  self.on_definition_not_found = :nothing
+  #
+  config.on_definition_not_found = :nothing
 
 
   # Set the filter_params to true if you want to overwrite the params and
@@ -40,8 +37,8 @@ module RequestParamsValidation
   # If params is an ActionController::Parameters, it sets the permitted attribute to true.
   #
   # The default value is true.
-  mattr_accessor :filter_params
-  self.filter_params = true
+  #
+  config.filter_params = true
 
 
   # If you want for some reason to save the original params in an instance variable before
@@ -51,8 +48,8 @@ module RequestParamsValidation
   #   - config.save_original_params = :@original_params
   #
   # The default value is false.
-  mattr_accessor :save_original_params
-  self.save_original_params = false
+  #
+  config.save_original_params = false
 
 
   # Rails automatically adds the keys 'controller' and 'action' to the params object. The gem
@@ -63,13 +60,13 @@ module RequestParamsValidation
   #   - config.remove_keys_from_params = %i(controller action)
   #
   # The default value is [].
-  mattr_accessor :remove_keys_from_params
-  self.remove_keys_from_params = []
+  #
+  config.remove_keys_from_params = []
 
 
   # Extension configuration goes here. Here you can extend behaviours and
   # default values of the gem.
-  module ExtensionConfiguration
+  config.extend do |extend|
 
     # Set a module with all your custom types you want the gem to manage.
     # For example, if you want to add a custom type named "cellphone", you just need to
@@ -88,30 +85,30 @@ module RequestParamsValidation
     #   - extend.types = Utils::ValidationTypes
     #
     # The default value is false.
-    mattr_accessor :types
-    self.types = false
+    #
+    extend.types = false
 
 
     # Add boolean true values that you want the gem to manage, behalf the default ones,
-    # true and 'true'. For example, you can add the integer 1 or the string 't' or 'y' etc.
+    # true and 'true'. For example, you can add the integer 1 or the string 't' or 'yes' etc.
     #
     # Example:
     #   - extend.boolean_true_values = [1, 't']
     #
     # The default value is []
-    mattr_accessor :boolean_true_values
-    self.boolean_true_values = []
+    #
+    extend.boolean_true_values = []
 
 
     # Add boolean false values that you want the gem to manage, behalf the default ones,
-    # false and 'false'. For example, you can add the integer 0 or the string 'f' or 'n' etc.
+    # false and 'false'. For example, you can add the integer 0 or the string 'f' or 'no' etc.
     #
     # Example:
     #   - extend.boolean_false_values = [0, 'f']
     #
     # The default value is []
-    mattr_accessor :boolean_false_values
-    self.boolean_false_values = []
+    #
+    extend.boolean_false_values = []
   end
 
 
@@ -120,7 +117,7 @@ module RequestParamsValidation
   #
   # Notice that the local configuration of a definition will have more precedence
   # than this global ones.
-  module FormatsConfiguration
+  config.formats do |format|
 
     # Specify the format for the type "date". If not format is specified
     # then the Date.parse method will be used for the validation. Otherwise, it
@@ -133,8 +130,8 @@ module RequestParamsValidation
     #   - formats.date = '%Y-%m-%d'
     #
     # The default value is nil.
-    mattr_accessor :date
-    self.date = nil
+    #
+    format.date = nil
 
 
     # Specify the format for the type "datetime". If not format is specified
@@ -148,8 +145,8 @@ module RequestParamsValidation
     #   - formats.datetime = '%Y-%m-%dT%H:%M:%S%z'
     #
     # The default value is nil.
-    mattr_accessor :datetime
-    self.datetime = nil
+    #
+    format.datetime = nil
 
 
     # Specify the precision for the type "decimal". This option will not validate the decimal
@@ -160,8 +157,8 @@ module RequestParamsValidation
     #       configuration for that parameter.
     #
     # The default value is nil. That means, no round.
-    mattr_accessor :decimal_precision
-    self.decimal_precision = nil
+    #
+    format.decimal_precision = nil
   end
 
 
@@ -174,7 +171,7 @@ module RequestParamsValidation
   #
   # Note that the classes set here should be in Rails autoload_paths or you would need to
   #      require it or autoload it before setting it
-  module ExceptionsConfiguration
+  config.exceptions do |exception|
 
     # Here you can set your custom exception class to be raisen when a required
     # parameter is missing.
@@ -186,8 +183,8 @@ module RequestParamsValidation
     #         - param_type  => 'The parameter type'
     #
     # The default value is RequestParamsValidation::MissingParameterError.
-    mattr_accessor :on_missing_parameter
-    self.on_missing_parameter = RequestParamsValidation::MissingParameterError
+    #
+    exceptions.on_missing_parameter = RequestParamsValidation::MissingParameterError
 
 
     # Here you can set your custom exception class to be raisen when the parameter type
@@ -201,8 +198,8 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_type
-    self.on_invalid_parameter_type = RequestParamsValidation::InvalidParameterValueError
+    #
+    exceptions.on_invalid_parameter_type = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter inclusion
@@ -217,8 +214,8 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_inclusion
-    self.on_invalid_parameter_inclusion = RequestParamsValidation::InvalidParameterValueError
+    #
+    exceptions.on_invalid_parameter_inclusion = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter length
@@ -234,8 +231,8 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_length
-    self.on_invalid_parameter_length = RequestParamsValidation::InvalidParameterValueError
+    #
+    exceptions.on_invalid_parameter_length = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter value
@@ -251,8 +248,8 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_value_size
-    self.on_invalid_parameter_value_size = RequestParamsValidation::InvalidParameterValueError
+    #
+    exceptions.on_invalid_parameter_value_size = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter format
@@ -267,8 +264,8 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_format
-    self.on_invalid_parameter_format = RequestParamsValidation::InvalidParameterValueError
+    #
+    exceptions.on_invalid_parameter_format = RequestParamsValidation::InvalidParameterValueError
 
 
     # Here you can set your custom exception class to be raisen when the parameter validate
@@ -282,53 +279,7 @@ module RequestParamsValidation
     #         - details     => 'The details of the failure'
     #
     # The default value is RequestParamsValidation::InvalidParameterValueError.
-    mattr_accessor :on_invalid_parameter_custom_validation
-    self.on_invalid_parameter_custom_validation = RequestParamsValidation::InvalidParameterValueError
-  end
-
-
-  # Method for defining a resource. This is the entrypoint for each resource
-  # configuration.
-  def self.define(&block)
-    RequestParamsValidation::Definitions.register_resource(&block)
-  end
-
-
-  # Default way to setup RequestParamsValidation configuration.
-  def self.configure
-    yield self
-  end
-
-
-  # Default way to extend configuration if a block is given, otherwise
-  # it returns the ExtensionConfiguration module.
-  def self.extend
-    if block_given?
-      yield ExtensionConfiguration
-    else
-      ExtensionConfiguration
-    end
-  end
-
-
-  # Default way to setup formats configuration if a block is given, otherwise
-  # it returns the FormatsConfiguration module.
-  def self.formats
-    if block_given?
-      yield FormatsConfiguration
-    else
-      FormatsConfiguration
-    end
-  end
-
-
-  # Default way to setup exceptions configuration if a block is given, otherwise
-  # it returns the ExceptionConfiguration module.
-  def self.exceptions
-    if block_given?
-      yield ExceptionsConfiguration
-    else
-      ExceptionsConfiguration
-    end
+    #
+    exceptions.on_invalid_parameter_custom_validation = RequestParamsValidation::InvalidParameterValueError
   end
 end

@@ -492,7 +492,7 @@ end
 ```
 
 To see a complete initializer file with all the options and description of each of one
-please see here.
+please see [here](./examples/initializer.rb).
 
 ## Future Work
 In the near future the plan is to continue adding features to the gem. In order of
