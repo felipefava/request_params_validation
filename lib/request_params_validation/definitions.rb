@@ -6,8 +6,8 @@ module RequestParamsValidation
     @definitions = {}
 
     def self.load_all
-      time = Time.now
-      Dir["#{definitions_path}/**/*.rb"].each { |file| require file }
+      definitions_suffix = RequestParamsValidation.definitions_suffix
+      Dir["#{definitions_path}/**/*#{definitions_suffix}.rb"].each { |file| require file }
     end
 
     def self.register_resource(&block)
@@ -44,8 +44,13 @@ module RequestParamsValidation
     private_class_method :definitions_path
 
     def self.resource_name_from_block(&block)
+      definitions_suffix = RequestParamsValidation.definitions_suffix
+
       block_path = block.source_location.first
-      block_path.sub("#{definitions_path}/", '').sub('.rb', '')
+
+      block_path.sub("#{definitions_path}/", '')
+                .sub("#{definitions_suffix}/", '')
+                .sub('.rb', '')
     end
     private_class_method :resource_name_from_block
   end

@@ -33,20 +33,46 @@ gem install request_params_validation
 ## Usage
 To start using the gem without setting up any configuration is as simple as adding a
 `before_action` with the helper method `validate_params!` and define your expected request
-parameters for your resources actions. If no definition is found for a specific endpoint, the
-default behavior is to do nothing, that means, no validation will be executed and the params will
-be untouch as if the gem doesn't exist.
+parameters for your resources actions.
 
-This gem comes with a set of configurable options pretending to be flexible, and allowing you to
-customize it to your needs. For example, you can change the default helper method `validate_params!`
-for whatever name you want. [Here](#global_configurations) you can see all the allowed
-configurations.
+The approach of this gem is to have, for each controller file, a definition file. This definitions
+files is where it should be all data related to the endpoints of your API. This works as code
+documentation and allows to keep controllers code clean, ensuring that `params` object will
+always have the parameters you suppose to receive.
 
-Notice that all configuration option has a default value, and none of them are required, so you
-don't need to setup anything for getting started. In the future, the plan is to continue adding
-more configurable options and features.
+The default path for the definitions files is `app/definitions`, and their names should be the same
+as their respective controller's name, but ending with the suffix `_definition`. They also should
+respect the folder structure of the controllers folder. Please see the following project structure
+to clarify the idea:
 
-## Example
+```
+.
+├── app
+│   ├── controllers
+│   │   ├── commerces
+|   |   |   └── branches_controller.rb
+|   |   |
+|   |   ├── transactions_controller.rb
+│   │   └── users_controller.rb
+|   |
+│   ├── definitions
+│   │   ├── commerces
+|   |   |   └── branches_definition.rb
+|   |   |
+|   |   ├── transactions_definition.rb
+│   │   └── users_definition.rb
+│   └── ...
+|
+└── ...
+```
+
+This gem comes with a set of configurable options allowing you to customize it to your needs.
+For example, you can change the default helper method `validate_params!` for whatever name you
+want. You can also change the default path folder for the definitions `app/definitions` and even
+the suffix `_definition` of the file names. [Here](#global_configurations) you can see all
+globals configuration options
+
+### Example
 Add the `before_action` callback for all actions:
 
 ```ruby
@@ -107,23 +133,23 @@ RequestParamsValidation.define do |users|
 end
 ```
 
-The above definition is just a silly example, but is good enough to explain some things.
+The above definition is just a silly example, but is good enough to explain some important things.
 
-The first thing to say is that each controller file matches with a definition file with the same
-name and path of it. This means that if we have a controller in
-`app/commerces/branches_controller.rb`, then we will have the definition in
-`app/definitions/commerces/branches_definition.rb`, assuming we have all the default configuration.
-If the definition file doesn't exist for a controller, then the gem will not validate
-any param.
+The first thing to say is, as we already mentioned, that each controller file matches with a
+definition file with the same name and path of it, as you can see in the first line of each example
+above. Be aware that if the definition file doesn't exist for a controller, then the gem will not
+validate any param, unless you change this behaviour with the global configuration option
+`config.on_definition_not_found`. [Here](#global_configurations) you can see all globals
+configuration options.
 
-Explaining this, we can continue analyzing the above example. The method
-`RequestParamsValidation.define` allow you to define a resource. Notice that the defined resource
-is given by the current file path/name. After defining the resource, you can continue defining the
+As you may notice, the method `RequestParamsValidation.define` allow you to define a
+resource/controller. Notice that the resource you are defining is given by the current
+definition file path/name. After defining the resource, you can continue defining the
 actions for that resource with the `action` method. Then, for each action you can define the
-request using the `request` method, and there is where you will define the params validations for
-the current resource/action. You could think that the `request` step is not strictly necessary,
-because we could just defined the params validations inside de action block. However, it will have
-more sense in the future, when more extra options be added.
+request using the `request` method, and there is where you will define the params validations
+for the current resource/action. You could think that the `request` step is not strictly
+necessary, because we could just defined the params validations inside de action block. However,
+it will have more sense in the future, when more extra options be added.
 
 As you might notice, for defining required parameters we use the `required` method, otherwise
 we have the `optional` method. This two methods accept 2 arguments and a block. The first argument
@@ -131,8 +157,6 @@ is the only one required, and is the name or key of the parameter. The second ar
 options hash for specifing the extra validations, and the block is for defining nested params.
 
 In the following section we will see all the options validations in-depth look.
-
-### Project Structure
 
 ## Validations & Options
 None of the below options are required, so they can be omitted if you don't need to use them.
@@ -169,7 +193,8 @@ if a parameter should be an `integer`, a valid string integer like `"100"` will 
 `100`. The same applies to the other types.
 
 If you want to add your own types, you can extend the supported types with the global
-configuration option `extend.types`. See [here](#global_configurations) all globals configuration options.
+configuration option `extend.types`. See [here](#global_configurations) all globals
+configuration options.
 
 ```ruby
 some_action.request do |params|
@@ -247,7 +272,8 @@ However, there are cases when you only want to accept a specific format for a da
 `"%Y-%m-%e"`. In this cases you have two options.
 
 1. Use the global configuration option `format.date`, so all date types must have the specified
-   format through all the requests. See [here](#global_configurations) all globals configuration options.
+   format through all the requests. See [here](#global_configurations) all globals configuration
+   options.
 2. Specify the option `format: "%Y-%m-%e"` locally.
 
 You can perfectly use both approaches, but the second one will locally override the first one on

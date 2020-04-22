@@ -20,6 +20,18 @@ RequestParamsValidation.configure do |config|
   config.definitions_path = :'app/definitions'
 
 
+  # Specify the suffix for your definitions files names.
+  #
+  # Example:
+  #   - config.definitions_suffix = ''
+  # That means that the definition file for, i.e., a UsersController will be:
+  # "app/definitions/users.rb" instead of "app/definitions/users_definition.rb"
+  #
+  # The default suffix is :_definition.
+  #
+  config.definitions_suffix = :_definition
+
+
   # The on_definition_not_found option accepts two values: :nothing or :raise.
   # - :raise means that if the definition for a controller/action can not be found,
   #          it will raise RequestParamsValidation::DefinitionNotFound. This is useful when
