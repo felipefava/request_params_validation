@@ -14,7 +14,7 @@ It is designed to work for any expected params structure, from a simple hash to 
 deeply nested data. It pretends to be a flexible library where you can change and customize
 several options.
 
-It is intended for REST-like RoR APIs.
+It is intended for REST-like Ruby on Rails APIs.
 
 ## Installation
 Add this line to your application's Gemfile:
@@ -69,7 +69,7 @@ to clarify the idea:
 This gem comes with a set of configurable options allowing you to customize it to your needs.
 For example, you can change the default helper method `validate_params!` for whatever name you
 want. You can also change the default path folder for the definitions `app/definitions` and even
-the suffix `_definition` of the file names. [Here](#global_configurations) you can see all
+the suffix `_definition` of the file names. [Here](#configuration) you can see all
 globals configuration options
 
 ### Example
@@ -136,13 +136,13 @@ end
 The above definition is just a silly example, but is good enough to explain some important things.
 
 The first thing to say is, as we already mentioned, that each controller file matches with a
-definition file with the same name and path of it, as you can see in the first line of each example
+definition file with the same name and path of it, as you can see in the first line of the example
 above. Be aware that if the definition file doesn't exist for a controller, then the gem will not
-validate any param, unless you change this behaviour with the global configuration option
-`config.on_definition_not_found`. [Here](#global_configurations) you can see all globals
+validate any param, unless you change this behavior with the global configuration option
+`config.on_definition_not_found`. [Here](#configuration) you can see all globals
 configuration options.
 
-As you may notice, the method `RequestParamsValidation.define` allow you to define a
+As you might notice, the method `RequestParamsValidation.define` allow you to define a
 resource/controller. Notice that the resource you are defining is given by the current
 definition file path/name. After defining the resource, you can continue defining the
 actions for that resource with the `action` method. Then, for each action you can define the
@@ -151,7 +151,7 @@ for the current resource/action. You could think that the `request` step is not 
 necessary, because we could just defined the params validations inside de action block. However,
 it will have more sense in the future, when more extra options be added.
 
-As you might notice, for defining required parameters we use the `required` method, otherwise
+For defining required parameters we use the `required` method, otherwise
 we have the `optional` method. This two methods accept 2 arguments and a block. The first argument
 is the only one required, and is the name or key of the parameter. The second argument is an
 options hash for specifing the extra validations, and the block is for defining nested params.
@@ -193,15 +193,18 @@ if a parameter should be an `integer`, a valid string integer like `"100"` will 
 `100`. The same applies to the other types.
 
 If you want to add your own types, you can extend the supported types with the global
-configuration option `extend.types`. See [here](#global_configurations) all globals
+configuration option `extend.types`. See [here](#configuration) all globals
 configuration options.
 
 ```ruby
 some_action.request do |params|
   params.required :key_1, type: :boolean
   params.required :key_2, type: :decimal
+  # ...
 end
 ```
+
+Let's see each of the types now.
 
 #### Hash type
 When defining a hash parameter, you will need to pass a block for specifing the nested object.
@@ -232,7 +235,7 @@ some_action.request do |params|
   params.required :key_1, type: :array
 
   # Only allows decimals with a value less than 1_000 for the elements of the array
-  params.required :key_2, type: :array, elements: { type: :decimals, value: { max: 1_000 }
+  params.required :key_2, type: :array, elements: { type: :decimal, value: { max: 1_000 }
 
   # Only allows objects with a required key 'nested_key' of type 'email' for the
   # elements of the array
@@ -250,7 +253,7 @@ Accepts only valid integers like `5` or `"5"`.
 
 #### Decimal type
 Accepts only valid decimals like `5` or `1.5` or `10.45`. With decimals parameters you can use
-the option `precision`. Continue reading for more details about this option.
+the option `precision`. Go [here](#precision) for more details about this option.
 
 #### Boolean type
 Accepts only valid boolean values. The default valid boolean values are:
@@ -262,17 +265,17 @@ Accepts only valid boolean values. The default valid boolean values are:
 If you need to add more values for the boolean type, for example  `['yes', 'no', 1, 0, 't', 'f']`,
 you can extend the `true values` and the `false values` independently, with the global
 configuration options `extend.boolean_true_values` and `extend.boolean_false_values` respectively.
-See [here](#global_configurations) all globals configuration options.
+See [here](#configuration) all globals configuration options.
 
 #### Date type
 Date type accepts only valid dates. This means that values like `'04/10/1995'` are valids, and
 will be converter to a Date object like  `Wed, 04 Oct 1995`.
 
-However, there are cases when you only want to accept a specific format for a date, like
+However, they are cases when you only want to accept a specific format for a date, like
 `"%Y-%m-%e"`. In this cases you have two options.
 
 1. Use the global configuration option `format.date`, so all date types must have the specified
-   format through all the requests. See [here](#global_configurations) all globals configuration
+   format through all the requests. See [here](#configuration) all globals configuration
    options.
 2. Specify the option `format: "%Y-%m-%e"` locally.
 
@@ -371,7 +374,7 @@ You can add custom validations to the parameter with the option `validate`.
 
 This option accepts a Proc as value or a hash. For example,
 `validate: lambda { |value| value > Date.today }` is equivalent to
-`validate: { function: lambda { |value| value > Date.today } }`. However, the hash value
+`validate: { function: lambda { |value| value > Date.today } }`. The hash value
 also accepts the `message` option.
 
 ```ruby
@@ -381,7 +384,7 @@ some_action.request do |params|
 end
 ```
 
-### Precision
+### Precision <a name='precision'></a>
 The `precision` option are for `decimal` types. This option does not execute any validation
 on the value of the parameter, but it will round the decimal when the value is converter to
 the specified type.
@@ -512,9 +515,9 @@ However, if the above is not enough for your app, and you need to fully customiz
 and the messages, you can setup your own exceptions classes for each type of failure. They are
 globals configurations options that allow you to do that. See below to see them all.
 
-## Global Configurations <a name='global_configurations'></a>
+## Global Configurations <a name='configuration'></a>
 Global configurations help you to customize the gem to fulfill your needs. To change this
-configuration, you need to create an initializer and setup what you want to change:
+configuration, you need to create an initializer and configure what you want to change:
 
 ```ruby
 # config/initializers/request_params_validation.rb
@@ -525,13 +528,14 @@ end
 ```
 
 To see a complete initializer file of the configuration with all the options and their description,
-please see [here](./examples/initializer.rb)
+please see [here](./examples/initializer.rb).
 
 ## Future Work
 In the near future the plan is to continue adding features to the gem. In order of
 importance, next changes are:
-- Add tests to all the gem
+- Add tests
 - Add doc generation from the definitions
+- Add representations for DRY definitions
 - Add more options to the actions definitions
 - Add handler for responses
 
