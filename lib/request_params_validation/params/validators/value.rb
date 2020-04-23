@@ -18,7 +18,7 @@ module RequestParamsValidation
 
         def default_invalid_value_message(min, max)
           message = if param.element_of_array?
-                      'All elements should have a value'
+                      'All elements of the array should have a value'
                     else
                       'Value shoud be'
                     end

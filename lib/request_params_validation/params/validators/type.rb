@@ -34,7 +34,7 @@ module RequestParamsValidation
           type = :object if type == Params::HASH_TYPE
 
           message = if param.element_of_array?
-                      "All elements should be a valid #{type}"
+                      "All elements of the array should be a valid #{type}"
                     else
                       "Value should be a valid #{type}"
                     end
