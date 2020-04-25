@@ -171,15 +171,11 @@ module RequestParamsValidation
       def build_sub_definition(&block)
         return unless @type == Params::HASH_TYPE
 
-        if block_given?
-          request = Request.new
+        request = Request.new
 
-          block.call(request)
+        block.call(request) if block_given?
 
-          request.params
-        else
-          raise DefinitionArgumentError.new("Expecting block for parameter '#{@key}'")
-        end
+        request.params
       end
     end
   end

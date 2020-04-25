@@ -208,10 +208,16 @@ Let's see each of the types now.
 
 #### Hash type
 When defining a hash parameter, you will need to pass a block for specifing the nested object.
+If no block is passed, the gem will only check that the value of the parameter be a valid hash
+object, without validating the content of it.
 
 ```ruby
 some_action.request do |params|
-  params.required :key_name, type: :hash do |key_name|
+  # Allows any keys and values for the hash
+  params.required :key_1, type: :hash
+
+  # Only allows the keys nested_key_1 and nested_key_2
+  params.required :key_2, type: :hash do |key_name|
     key_name.required :nested_key_1, type: :string
     key_name.required :nested_key_2, type: :integer
   end
