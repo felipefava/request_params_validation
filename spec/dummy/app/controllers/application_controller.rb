@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from RequestParamsValidation::RequestParamError do |exception|
     render status: :unprocessable_entity,
-           json: { status: :error, message: exception.message }
+           json: { status: :error, key: exception.class.to_s, message: exception.message }
   end
 
   def dummy
