@@ -9,14 +9,14 @@ RSpec.shared_examples 'validates presence' do
 
       context 'and value is present' do
         let(:key_value) { 'some value' }
+
         it { expect(response).to have_http_status(200) }
       end
 
-      [nil, '', {}, []].each do |value|
-        context "and value is #{value.inspect}" do
-          let(:key_value) { value }
-          it { expect(response).to have_http_status(200) }
-        end
+      context "and value is not present" do
+        let(:key_value) { [nil, '', {}, []].sample }
+
+        it { expect(response).to have_http_status(200) }
       end
     end
 
@@ -25,21 +25,21 @@ RSpec.shared_examples 'validates presence' do
 
       context 'and value is present' do
         let(:key_value) { 'some value' }
+
         it { expect(response).to have_http_status(200) }
       end
 
-      [nil, '', {}, []].each do |value|
-        context "and value is #{value.inspect}" do
-          let(:key_value) { value }
-          it { expect(response).to have_http_status(422) }
+      context 'and value is not present' do
+        let(:key_value) { [nil, '', {}, []].sample }
 
-          it 'has the correct error messages' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::MissingParameterError',
-              message: "The parameter 'key' is missing"
-            }.to_json)
-          end
+        it { expect(response).to have_http_status(422) }
+
+        it 'has the correct error messages' do
+          expect(response.body).to eq({
+            status: :error,
+            key: 'RequestParamsValidation::MissingParameterError',
+            message: "The parameter 'key' is missing"
+          }.to_json)
         end
       end
     end
@@ -49,18 +49,19 @@ RSpec.shared_examples 'validates presence' do
 
       context 'and value is present' do
         let(:key_value) { 'some value' }
+
         it { expect(response).to have_http_status(200) }
       end
 
-      ['', {}, []].each do |value|
-        context "and value is #{value.inspect}" do
-          let(:key_value) { value }
-          it { expect(response).to have_http_status(200) }
-        end
+      context 'and value is empty' do
+        let(:key_value) { ['', {}, []].sample }
+
+        it { expect(response).to have_http_status(200) }
       end
 
       context 'and value is nil' do
         let(:key_value) { nil }
+
         it { expect(response).to have_http_status(422) }
 
         it 'has the correct error messages' do

@@ -35,7 +35,7 @@ module RequestParamsValidation
     end
   end
 
-  class UnsupportedTypeError < RequestParamError
+  class UnsupportedTypeError < GeneralError
     def initialize(options)
       msg = "Unsupported type '#{options[:param_type]}' for the parameter '#{options[:param_key]}'"
 
