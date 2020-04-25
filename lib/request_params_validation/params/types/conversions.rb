@@ -30,7 +30,7 @@ module RequestParamsValidation
           format ? Date.strptime(value, format) : Date.parse(value)
         end
 
-        def convert_to_datetime(value)
+        def convert_to_datetime(value, format)
           format = format || RequestParamsValidation.formats.datetime
 
           format ? DateTime.strptime(value, format) : DateTime.parse(value)
