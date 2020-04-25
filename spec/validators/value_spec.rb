@@ -1,4 +1,4 @@
-RSpec.shared_examples 'validates value' do
+RSpec.shared_examples 'validates value size' do
   describe 'value validator' do
     let(:request_params) { { key: key_value } }
 
