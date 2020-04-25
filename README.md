@@ -306,8 +306,7 @@ Accepts only valid emails like `john.doe@mail.com`. It's just a helper for a str
 an email regexp format.
 
 ### Inclusion
-The `inclusion` option is for validating that the param value is included in a given set.
-In fact, this set can be any enumerable object.
+The `inclusion` option is for validating that the param value is included in a given array.
 
 The value for this option can be an enumerable or a hash. `inclusion: %w(asc desc)` is equivalent
 to `inclusion: { in: %w(asc desc) }`.

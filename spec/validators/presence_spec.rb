@@ -13,7 +13,7 @@ RSpec.shared_examples 'validates presence' do
         it { expect(response).to have_http_status(200) }
       end
 
-      context "and value is not present" do
+      context 'and value is not present' do
         let(:key_value) { [nil, '', {}, []].sample }
 
         it { expect(response).to have_http_status(200) }

@@ -14,7 +14,7 @@ module RequestParamsValidation
           end
         end
 
-        def default_invalid_inclusion_message
+        def default_invalid_inclusion_message(include_in)
           if param.element_of_array?
             "All elements values of the array should be in #{include_in}"
           else
