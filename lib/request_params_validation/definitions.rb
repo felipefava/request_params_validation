@@ -3,7 +3,7 @@ require 'request_params_validation/exceptions/definitions_errors'
 
 module RequestParamsValidation
   module Definitions
-    @definitions = {}
+    @@definitions = {}
 
     def self.load_all
       definitions_suffix = RequestParamsValidation.definitions_suffix
@@ -18,11 +18,11 @@ module RequestParamsValidation
 
       block.call(resource)
 
-      @definitions[resource_name] = resource
+      @@definitions[resource_name] = resource
     end
 
     def self.get_request(resource, action)
-      resource = @definitions[resource]
+      resource = @@definitions[resource]
 
       return unless resource
 
