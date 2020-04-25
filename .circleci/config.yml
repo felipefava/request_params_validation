@@ -1,0 +1,31 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:2.6.3-stretch-node
+    steps:
+      - checkout
+
+      - restore_cache:
+          name: Restore Gems Dependencies Cache
+          keys:
+            - gems-dependencies-{{ checksum "Gemfile.lock" }}
+            - gems-dependencies- # fallback to using the latest cache if no exact match is found
+
+      - run:
+          name: Install Dependencies
+          command: |
+            gem update --system
+            gem install bundler
+            bundle config --local path 'vendor/bundle'
+            bundle install --jobs=4 --retry=3
+
+      - save_cache:
+          name: Save Gems Dependencies Cache
+          key: gems-dependencies-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Execute Tests
+          command: bundle exec rspec
