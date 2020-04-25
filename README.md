@@ -434,8 +434,6 @@ some_action.request do |params|
 end
 ```
 
-<br>
-
 ---
 **NOTE**
 
@@ -445,7 +443,6 @@ further validation. Otherwise, it will validate the type, convert it to the righ
 continue with the others validations. So, all others validations will be executed with the parameter
 value already converter to the specified type, so keep in mind that at defining the validations.
 
----
 
 ## Errors & Messages
 For default, when a required parameter failed the presence validation, the exception
