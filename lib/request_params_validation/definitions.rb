@@ -7,7 +7,7 @@ module RequestParamsValidation
 
     def self.load_all
       definitions_suffix = RequestParamsValidation.definitions_suffix
-      Dir["#{definitions_path}/**/*#{definitions_suffix}.rb"].each { |file| require file }
+      Dir["#{definitions_path}/**/*#{definitions_suffix}.rb"].each { |file| load file }
     end
 
     def self.register_resource(&block)
