@@ -11,6 +11,7 @@ require 'rspec/rails'
 
 # Rails.root is dummy app root
 Dir[Rails.root.join('../support/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('../helpers/**/*.rb')].each { |f| require f }
 Dir[Rails.root.join('../validators/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
@@ -33,6 +34,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.include Helpers::ErrorMessages
 
   config.include_context 'sets configuration'
 end

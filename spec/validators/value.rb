@@ -1,3 +1,5 @@
+require_relative '../shared/element_of_an_array_with_error'
+
 RSpec.shared_examples 'validates value size' do
   describe 'value validator' do
     let(:min) { nil }
@@ -24,27 +26,27 @@ RSpec.shared_examples 'validates value size' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Value shoud be greater or " \
-                     "equal than #{min}"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: "Value should be greater or equal than #{min}"
+            )
+          )
         end
 
         context 'when the message option is set' do
           let(:message) { 'My custom message' }
 
-          it { expect(response).to have_http_status(422) }
-
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. #{message}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(:invalid_param, param_key: :key, details: message)
+            )
           end
+
+          it_behaves_like 'an element of an array with value error'
         end
+
+        it_behaves_like 'an element of an array with value error'
       end
     end
 
@@ -61,27 +63,27 @@ RSpec.shared_examples 'validates value size' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Value shoud be less or " \
-                     "equal than #{max}"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: "Value should be less or equal than #{max}"
+            )
+          )
         end
 
         context 'when the message option is set' do
           let(:message) { 'My custom message' }
 
-          it { expect(response).to have_http_status(422) }
-
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. #{message}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(:invalid_param, param_key: :key, details: message)
+            )
           end
+
+          it_behaves_like 'an element of an array with value error'
         end
+
+        it_behaves_like 'an element of an array with value error'
       end
     end
 
@@ -99,27 +101,27 @@ RSpec.shared_examples 'validates value size' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Value shoud be between " \
-                     "500 and 1000"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: "Value should be between #{min} and #{max}"
+            )
+          )
         end
 
         context 'when the message option is set' do
           let(:message) { 'My custom message' }
 
-          it { expect(response).to have_http_status(422) }
-
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. #{message}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(:invalid_param, param_key: :key, details: message)
+            )
           end
+
+          it_behaves_like 'an element of an array with value error'
         end
+
+        it_behaves_like 'an element of an array with value error'
       end
     end
   end

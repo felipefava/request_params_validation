@@ -21,11 +21,7 @@ RSpec.shared_examples 'validates custom validations' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid"
-          }.to_json)
+          expect(response.body).to eq(build_error_response(:invalid_param, param_key: :key))
         end
       end
     end
@@ -45,11 +41,7 @@ RSpec.shared_examples 'validates custom validations' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid"
-          }.to_json)
+          expect(response.body).to eq(build_error_response(:invalid_param, param_key: :key))
         end
 
         context 'when the message option is set' do
@@ -58,11 +50,9 @@ RSpec.shared_examples 'validates custom validations' do
           it { expect(response).to have_http_status(422) }
 
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. #{message}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(:invalid_param, param_key: :key, details: message)
+            )
           end
         end
       end

@@ -1,5 +1,8 @@
+require_relative '../shared/element_of_an_array_with_error'
+
 RSpec.shared_examples 'validates length' do
   describe 'length validator' do
+    let(:message) { nil }
     let(:define_params) { -> (params) { params.optional :key, length: length } }
 
     let(:request_params) { { key: key_value } }
@@ -7,6 +10,8 @@ RSpec.shared_examples 'validates length' do
     before { post :dummy, body: request_params.to_json, as: :json }
 
     context 'when length option is an integer' do
+      let(:min) { 4 }
+      let(:max) { 4 }
       let(:length) { 4 }
 
       let(:key_value) { ['some', [1, 2, 3, 4], '4444'].sample }
@@ -19,20 +24,21 @@ RSpec.shared_examples 'validates length' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Length shoud be equal to #{length}"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: "Length should be equal to #{length}"
+            )
+          )
         end
+
+        it_behaves_like 'an element of an array with length error'
       end
     end
 
     context 'when length option is a hash' do
       let(:min) { nil }
       let(:max) { nil }
-      let(:message) { nil }
-
       let(:length) { { min: min, max: max, message: message } }
 
       context 'when only the min option is set' do
@@ -48,27 +54,27 @@ RSpec.shared_examples 'validates length' do
           it { expect(response).to have_http_status(422) }
 
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. Length shoud be greater or " \
-                       "equal than #{min}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(
+                :invalid_param,
+                param_key: :key, details: "Length should be greater or equal than #{min}"
+              )
+            )
           end
 
           context 'when the message option is set' do
             let(:message) { 'My custom message' }
 
-            it { expect(response).to have_http_status(422) }
-
             it 'returns the correct error message' do
-              expect(response.body).to eq({
-                status: :error,
-                key: 'RequestParamsValidation::InvalidParameterValueError',
-                message: "The value for the parameter 'key' is invalid. #{message}"
-              }.to_json)
+              expect(response.body).to eq(
+                build_error_response(:invalid_param, param_key: :key, details: message)
+              )
             end
+
+            it_behaves_like 'an element of an array with length error'
           end
+
+          it_behaves_like 'an element of an array with length error'
         end
       end
 
@@ -85,27 +91,27 @@ RSpec.shared_examples 'validates length' do
           it { expect(response).to have_http_status(422) }
 
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. Length shoud be less or " \
-                       "equal than #{max}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(
+                :invalid_param,
+                param_key: :key, details: "Length should be less or equal than #{max}"
+              )
+            )
           end
 
           context 'when the message option is set' do
             let(:message) { 'My custom message' }
 
-            it { expect(response).to have_http_status(422) }
-
             it 'returns the correct error message' do
-              expect(response.body).to eq({
-                status: :error,
-                key: 'RequestParamsValidation::InvalidParameterValueError',
-                message: "The value for the parameter 'key' is invalid. #{message}"
-              }.to_json)
+              expect(response.body).to eq(
+                build_error_response(:invalid_param, param_key: :key, details: message)
+              )
             end
+
+            it_behaves_like 'an element of an array with length error'
           end
+
+          it_behaves_like 'an element of an array with length error'
         end
       end
 
@@ -123,27 +129,27 @@ RSpec.shared_examples 'validates length' do
           it { expect(response).to have_http_status(422) }
 
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. Length shoud be between " \
-                       "#{min} and #{max}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(
+                :invalid_param,
+                param_key: :key, details: "Length should be between #{min} and #{max}"
+              )
+            )
           end
 
           context 'when the message option is set' do
             let(:message) { 'My custom message' }
 
-            it { expect(response).to have_http_status(422) }
-
             it 'returns the correct error message' do
-              expect(response.body).to eq({
-                status: :error,
-                key: 'RequestParamsValidation::InvalidParameterValueError',
-                message: "The value for the parameter 'key' is invalid. #{message}"
-              }.to_json)
+              expect(response.body).to eq(
+                build_error_response(:invalid_param, param_key: :key, details: message)
+              )
             end
+
+            it_behaves_like 'an element of an array with length error'
           end
+
+          it_behaves_like 'an element of an array with length error'
         end
       end
     end

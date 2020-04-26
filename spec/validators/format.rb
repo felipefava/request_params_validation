@@ -1,5 +1,8 @@
+require_relative '../shared/element_of_an_array_with_error'
+
 RSpec.shared_examples 'validates format' do
   describe 'format validator' do
+    let(:message) { nil }
     let(:define_params) { -> (params) { params.optional :key, format: format } }
 
     let(:request_params) { { key: key_value } }
@@ -19,18 +22,20 @@ RSpec.shared_examples 'validates format' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Value format is invalid"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: 'Value format is invalid'
+            )
+          )
         end
+
+        it_behaves_like 'an element of an array with format error'
       end
     end
 
     context 'when format option is a hash' do
       let(:regexp) { /^1.*/ }
-      let(:message) { nil }
       let(:format) { { regexp: regexp, message: message } }
 
       let(:key_value) { '1 some value' }
@@ -43,26 +48,27 @@ RSpec.shared_examples 'validates format' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::InvalidParameterValueError',
-            message: "The value for the parameter 'key' is invalid. Value format is invalid"
-          }.to_json)
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key, details: 'Value format is invalid'
+            )
+          )
         end
 
         context 'when the message option is set' do
           let(:message) { 'My custom message' }
 
-          it { expect(response).to have_http_status(422) }
-
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::InvalidParameterValueError',
-              message: "The value for the parameter 'key' is invalid. #{message}"
-            }.to_json)
+            expect(response.body).to eq(
+              build_error_response(:invalid_param, param_key: :key, details: message)
+            )
           end
+
+          it_behaves_like 'an element of an array with format error'
         end
+
+        it_behaves_like 'an element of an array with format error'
       end
     end
   end

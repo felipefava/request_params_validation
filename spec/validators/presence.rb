@@ -32,11 +32,7 @@ RSpec.shared_examples 'validates presence' do
         it { expect(response).to have_http_status(422) }
 
         it 'returns the correct error message' do
-          expect(response.body).to eq({
-            status: :error,
-            key: 'RequestParamsValidation::MissingParameterError',
-            message: "The parameter 'key' is missing"
-          }.to_json)
+          expect(response.body).to eq(build_error_response(:missing_param, param_key: :key))
         end
       end
 
@@ -57,11 +53,7 @@ RSpec.shared_examples 'validates presence' do
           it { expect(response).to have_http_status(422) }
 
           it 'returns the correct error message' do
-            expect(response.body).to eq({
-              status: :error,
-              key: 'RequestParamsValidation::MissingParameterError',
-              message: "The parameter 'key' is missing"
-            }.to_json)
+            expect(response.body).to eq(build_error_response(:missing_param, param_key: :key))
           end
         end
       end
