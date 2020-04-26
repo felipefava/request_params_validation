@@ -1,26 +1,24 @@
 RSpec.shared_examples 'validates format' do
   describe 'format validator' do
-    let(:request_params) { { key: key_value } }
-
     let(:define_params) { -> (params) { params.optional :key, format: format } }
+
+    let(:request_params) { { key: key_value } }
 
     before { post :dummy, body: request_params.to_json, as: :json }
 
-    context 'when format is a regexp' do
+    context 'when format option is a regexp' do
       let(:format) { /^start .* end$/ }
 
-      context 'and value is valid' do
-        let(:key_value) { 'start some-value end' }
+      let(:key_value) { 'start some-value end' }
 
-        it { expect(response).to have_http_status(200) }
-      end
+      it { expect(response).to have_http_status(200) }
 
-      context 'and value is invalid' do
+      context 'when parameter value is invalid' do
         let(:key_value) { 'invalid value' }
 
         it { expect(response).to have_http_status(422) }
 
-        it 'has the correct error messages' do
+        it 'returns the correct error message' do
           expect(response.body).to eq({
             status: :error,
             key: 'RequestParamsValidation::InvalidParameterValueError',
@@ -30,23 +28,21 @@ RSpec.shared_examples 'validates format' do
       end
     end
 
-    context 'when format is a hash' do
+    context 'when format option is a hash' do
       let(:regexp) { /^1.*/ }
       let(:message) { nil }
       let(:format) { { regexp: regexp, message: message } }
 
-      context 'and value is valid' do
-        let(:key_value) { '1 some value' }
+      let(:key_value) { '1 some value' }
 
-        it { expect(response).to have_http_status(200) }
-      end
+      it { expect(response).to have_http_status(200) }
 
-      context 'and value is invalid' do
+      context 'when parameter value is invalid' do
         let(:key_value) { 'do not start with 1' }
 
         it { expect(response).to have_http_status(422) }
 
-        it 'has the correct error messages' do
+        it 'returns the correct error message' do
           expect(response.body).to eq({
             status: :error,
             key: 'RequestParamsValidation::InvalidParameterValueError',
@@ -54,12 +50,12 @@ RSpec.shared_examples 'validates format' do
           }.to_json)
         end
 
-        context 'and has message' do
+        context 'when the message option is set' do
           let(:message) { 'My custom message' }
 
           it { expect(response).to have_http_status(422) }
 
-          it 'has the correct error messages' do
+          it 'returns the correct error message' do
             expect(response.body).to eq({
               status: :error,
               key: 'RequestParamsValidation::InvalidParameterValueError',
