@@ -20,7 +20,7 @@ module RequestParamsValidation
           message = if param.element_of_array?
                       'All elements of the array should have a length'
                     else
-                      'Length shoud be'
+                      'Length should be'
                     end
 
           if min && max

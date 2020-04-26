@@ -506,8 +506,8 @@ the table below:
 | Missing parameter         | N/A                                                  |
 | Invalid type              | - `Value should be a valid %{param_type}` <br> - `All elements of the array should be a valid %{type}` <br> If has `date` or `datetime` type with specified `format`: <br> &nbsp;&nbsp;&nbsp; - ` with the format %{format}` string is concatenated |
 | Invalid inclusion         | - `Value should be in %{include_in}` <br> - `All elements values of the array should have be in %{include_in}` |
-| Invalid length            | - `Length shoud be greater or equal than %{min}` <br> - `Length shoud be less or equal than %{max}`  <br> - `Length shoud be equal to %{min/max}` </br> - `Length shoud be between %{min} and %{max}` <br> - `All elements of the array should have a length ...` |
-| Invalid value size        | - `Value shoud be greater or equal than %{min}` <br> - `Value shoud be less or equal than %{max}` <br> - `Value shoud be between %{min} and %{max}` <br> - `All elements of the array should have a value ...` |
+| Invalid length            | - `Length should be greater or equal than %{min}` <br> - `Length should be less or equal than %{max}`  <br> - `Length should be equal to %{min/max}` </br> - `Length should be between %{min} and %{max}` <br> - `All elements of the array should have a length ...` |
+| Invalid value size        | - `Value should be greater or equal than %{min}` <br> - `Value should be less or equal than %{max}` <br> - `Value should be between %{min} and %{max}` <br> - `All elements of the array should have a value ...` |
 | Invalid format            | - `Value format is invalid` <br> - `An element of the array has an invalid format` |
 | Invalid custom validation | N/A                                                  |
 
