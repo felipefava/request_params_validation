@@ -2,6 +2,8 @@
 log/*.log
 pkg/
 
+coverage/
+
 spec/dummy/log/*.log
 spec/dummy/node_modules/
 spec/dummy/yarn-error.log
