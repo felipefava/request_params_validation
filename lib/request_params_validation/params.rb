@@ -32,6 +32,9 @@ module RequestParamsValidation
     private_class_method :validate_and_coerce_param
 
     def self.filter_params(definition, params, extra_keys = [])
+      return unless params
+      return params if definition.empty?
+
       params_keys = definition.map do |param_definition|
         key = param_definition.key
 
