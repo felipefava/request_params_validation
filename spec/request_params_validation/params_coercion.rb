@@ -151,7 +151,6 @@ RSpec.shared_examples 'coerce params' do
       it { expect(subject({})).to be_hash_with_value({}) }
 
       it { expect(subject({ a: 100, b: 'b' })).to be_hash_with_value({ a: 100, b: 'b' }) }
-      it { expect(subject({ a: 100, b: 'b' }).permitted?).to eq(true) }
 
       context 'when has nested params' do
         let(:define_params) do
@@ -174,14 +173,6 @@ RSpec.shared_examples 'coerce params' do
             nested_key_2: 200,
             nested_key_3: 'John'
           })
-        end
-
-        it 'set permitted attr to true' do
-          expect(subject({
-            nested_key_1: Date.today.to_s,
-            nested_key_2: '200',
-            nested_key_3: 'John'
-          }).permitted?).to eq(true)
         end
       end
     end

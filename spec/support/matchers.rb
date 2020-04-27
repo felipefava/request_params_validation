@@ -42,7 +42,7 @@ end
 
 RSpec::Matchers.define :be_hash_with_value do |value|
   match do |actual|
-    expect(actual).to be_a(ActionController::Parameters)
-    expect(actual).to eq(ActionController::Parameters.new(value).permit!)
+    expect(actual.to_unsafe_h).to be_a(Hash)
+    expect(actual.to_unsafe_h).to eq(value.deep_stringify_keys)
   end
 end
