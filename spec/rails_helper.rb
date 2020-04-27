@@ -18,7 +18,6 @@ require 'rspec/rails'
 # Rails.root is dummy app root
 Dir[Rails.root.join('../support/**/*.rb')].each { |f| require f }
 Dir[Rails.root.join('../helpers/**/*.rb')].each { |f| require f }
-Dir[Rails.root.join('../validators/**/*.rb')].each { |f| require f }
 
 RSpec.configure do |config|
   # RSpec Rails can automatically mix in different behaviours to your tests

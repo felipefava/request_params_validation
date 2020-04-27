@@ -1,4 +1,4 @@
-require_relative '../shared/element_of_an_array_with_error'
+require_relative '../../shared/element_of_an_array_with_error'
 
 RSpec.shared_examples 'validates inclusion' do
   describe 'inclusion validator' do
