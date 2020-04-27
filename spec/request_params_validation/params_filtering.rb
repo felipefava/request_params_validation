@@ -1,5 +1,8 @@
 RSpec.shared_examples 'filter params' do
   describe 'filtering' do
+    let(:filter_params) { true }
+    let(:remove_keys_from_params) { [] }
+
     let(:define_params) do
       -> (params) do
         params.required :key_1

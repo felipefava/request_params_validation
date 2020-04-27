@@ -9,6 +9,9 @@ RSpec.describe ApplicationController do
   include_examples 'validates format'
   include_examples 'validates custom validations'
 
+  include_examples 'params default values'
+  include_examples 'params transformations'
+
   include_examples 'coerce params'
   include_examples 'filter params'
 end
