@@ -1,4 +1,4 @@
-RSpec.shared_examples 'global configurations' do
+RSpec.describe ApplicationController, type: :controller  do
   describe 'global configurations' do
     describe 'helper_method_name' do
       let(:define_params) { -> (params) {} }

@@ -327,7 +327,7 @@ RSpec.shared_context 'sets configuration' do
     end
 
     # Hack to allow setting the request params definition on each test case
-    ApplicationController.dummy_params_definition = define_params
+    ApplicationController.dummy_params_definition = define_params if defined?(define_params)
 
     # Hack to allow changing the gem configuration on runtime (only for tests purpose)
     RequestParamsValidation::Definitions.class_variable_set(:@@definitions, {})

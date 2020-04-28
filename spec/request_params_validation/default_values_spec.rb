@@ -1,5 +1,5 @@
-RSpec.shared_examples 'params default values' do
-  describe 'default option' do
+RSpec.describe ApplicationController, type: :controller  do
+  describe 'params default values' do
     let(:define_params) do
       -> (params) do
         params.optional :no_default

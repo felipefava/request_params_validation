@@ -1,5 +1,5 @@
-RSpec.shared_examples 'params transformations' do
-  describe 'transform option' do
+RSpec.describe ApplicationController, type: :controller  do
+  describe 'params transformations' do
     let(:define_params) do
       -> (params) do
         params.required :no_transform

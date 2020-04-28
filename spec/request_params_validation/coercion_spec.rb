@@ -1,5 +1,5 @@
-RSpec.shared_examples 'coerce params' do
-  describe 'coercion' do
+RSpec.describe ApplicationController, type: :controller  do
+  describe 'params coercion' do
     let(:decimal_precision) { nil }
     let(:date_format) { nil }
     let(:datetime_format) { nil }

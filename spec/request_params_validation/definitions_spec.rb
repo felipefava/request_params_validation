@@ -1,6 +1,4 @@
-RSpec.shared_examples 'definitions' do
-  let(:define_params) { -> (params) {} }
-
+RSpec.describe 'definitions' do
   describe 'definitions hash' do
     subject { RequestParamsValidation::Definitions.class_variable_get(:@@definitions) }
 
@@ -26,7 +24,7 @@ RSpec.shared_examples 'definitions' do
 
       it { expect(subject['test_path'].actions.keys).to match_array(test_path_actions) }
 
-      context 'when it starts with a /' do
+      context 'when it starts with a slash' do
         let(:definitions_path) { '/definitions' }
 
         it { expect(subject.keys).to match_array(definitions) }
@@ -34,7 +32,7 @@ RSpec.shared_examples 'definitions' do
         it { expect(subject['test_path'].actions.keys).to match_array(test_path_actions) }
       end
 
-      context 'when it ends with a /' do
+      context 'when it ends with a slash' do
         let(:definitions_path) { 'definitions/' }
 
         it { expect(subject.keys).to match_array(definitions) }
@@ -61,7 +59,7 @@ RSpec.shared_examples 'definitions' do
 
     subject { load "#{Rails.root}/definitions/#{resource}.rb" }
 
-    context 'when the resource definitino has the error' do
+    context 'when the resource definition has the error' do
       let(:resource) { 'test_with_resource_error' }
 
       it 'raises RequestParamsValidation::DefinitionArgumentError' do

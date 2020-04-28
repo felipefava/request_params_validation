@@ -1,5 +1,5 @@
-RSpec.shared_examples 'filter params' do
-  describe 'filtering' do
+RSpec.describe ApplicationController, type: :controller  do
+  describe 'params filtering' do
     let(:filter_params) { true }
     let(:remove_keys_from_params) { [] }
 

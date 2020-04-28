@@ -27,7 +27,7 @@ RSpec.shared_examples 'validates type' do
       it { expect(response).to have_http_status(200) }
 
       context 'when parameter value is not a valid array' do
-        let(:key_value) { [rand(1_000), :john, 'Doe', false].sample }
+        let(:key_value) { [rand(1_000), 'john', 'Doe', false].sample }
 
         it { expect(response).to have_http_status(422) }
 
