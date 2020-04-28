@@ -13,4 +13,8 @@ class ApplicationController < ActionController::Base
   def dummy
     render json: { status: :success }
   end
+
+  def dummy_with_no_definition
+    render json: { status: :success }
+  end
 end

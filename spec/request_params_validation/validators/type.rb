@@ -22,7 +22,7 @@ RSpec.shared_examples 'validates type' do
     context 'when type is array' do
       let(:key_type) { [:array, 'array'].sample }
 
-      let(:key_value) { [rand(1_000), :john, 'Doe', false] }
+      let(:key_value) { [rand(1_000), 'john', 'Doe', false] }
 
       it { expect(response).to have_http_status(200) }
 
@@ -41,6 +41,36 @@ RSpec.shared_examples 'validates type' do
         end
 
         it_behaves_like 'an element of an array with type error'
+
+        describe 'custom exception for type validations' do
+          class CustomExceptionOnTypeValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_invalid_parameter_type) { CustomExceptionOnTypeValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnTypeValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: :array,
+              param_value: key_value,
+              details: 'Value should be a valid array'
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnTypeValidation,
+              'Error on custom exception'
+            )
+          end
+        end
       end
     end
 
@@ -165,6 +195,10 @@ RSpec.shared_examples 'validates type' do
               )
             )
           end
+
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y/%m/%e"
         end
       end
 
@@ -191,6 +225,10 @@ RSpec.shared_examples 'validates type' do
             )
           end
 
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y/%m/%e"
+
           context 'when the message option is set' do
             let(:message) { 'My custom message' }
 
@@ -199,6 +237,62 @@ RSpec.shared_examples 'validates type' do
                 build_error_response(:invalid_param, param_key: :key, details: message)
               )
             end
+          end
+        end
+      end
+
+      context 'when global format date is set' do
+        let(:format_date) { '%Y-%m' }
+
+        let(:key_value) { '2019-04' }
+
+        it { expect(response).to have_http_status(200) }
+
+        context 'when parameter value has the wrong format' do
+          let(:key_value) { '2019/04/11' }
+
+          it { expect(response).to have_http_status(422) }
+
+          it 'returns the correct error message' do
+            expect(response.body).to eq(
+              build_error_response(
+                :invalid_param,
+                param_key: :key,
+                details: "Value should be a valid date with the format #{format_date}"
+              )
+            )
+          end
+
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y-%m"
+        end
+
+        context 'when local format is set' do
+          let(:format) { '%Y-%m-%e' }
+
+          let(:key_value) { '2019-04-29' }
+
+          it { expect(response).to have_http_status(200) }
+
+          context 'when parameter value has the wrong format' do
+            let(:key_value) { '2019-04' }
+
+            it { expect(response).to have_http_status(422) }
+
+            it 'returns the correct error message' do
+              expect(response.body).to eq(
+                build_error_response(
+                  :invalid_param,
+                  param_key: :key,
+                  details: "Value should be a valid date with the format #{format}"
+                )
+              )
+            end
+
+            it_behaves_like 'an element of an array with type error',
+                            nil,
+                            "with the format %Y-%m-%e"
           end
         end
       end
@@ -250,6 +344,10 @@ RSpec.shared_examples 'validates type' do
               )
             )
           end
+
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y/%m/%e %H:%M"
         end
       end
 
@@ -257,7 +355,7 @@ RSpec.shared_examples 'validates type' do
         let(:message) { nil }
         let(:format) { { strptime: '%Y/%m/%e %H:%M', message: message } }
 
-        let(:key_value) { '2019/04/11 19:03' }
+        let(:key_value) { '2000/12/12 12:43' }
 
         it { expect(response).to have_http_status(200) }
 
@@ -276,6 +374,10 @@ RSpec.shared_examples 'validates type' do
             )
           end
 
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y/%m/%e %H:%M"
+
           context 'when the message option is set' do
             let(:message) { 'My custom message' }
 
@@ -284,6 +386,62 @@ RSpec.shared_examples 'validates type' do
                 build_error_response(:invalid_param, param_key: :key, details: message)
               )
             end
+          end
+        end
+      end
+
+      context 'when global format datetime is set' do
+        let(:format_datetime) { '%Y-%m-%e | %H' }
+
+        let(:key_value) { '2009-01-19 | 19:51' }
+
+        it { expect(response).to have_http_status(200) }
+
+        context 'when paramater value has the wrong format' do
+          let(:key_value) { '2019/04/11 - 00:03' }
+
+          it { expect(response).to have_http_status(422) }
+
+          it 'returns the correct error message' do
+            expect(response.body).to eq(
+              build_error_response(
+                :invalid_param,
+                param_key: :key,
+                details: "Value should be a valid datetime with the format #{format_datetime}"
+              )
+            )
+          end
+
+          it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y-%m-%e | %H"
+        end
+
+        context 'when local format is set' do
+          let(:format) { '%Y/%m/%e %H:%M' }
+
+          let(:key_value) { '1999/11/11 00:53' }
+
+          it { expect(response).to have_http_status(200) }
+
+          context 'when paramater value has the wrong format' do
+            let(:key_value) { '2010/11/21 | 14:14' }
+
+            it { expect(response).to have_http_status(422) }
+
+            it 'returns the correct error message' do
+              expect(response.body).to eq(
+                build_error_response(
+                  :invalid_param,
+                  param_key: :key,
+                  details: "Value should be a valid datetime with the format #{format}"
+                )
+              )
+            end
+
+            it_behaves_like 'an element of an array with type error',
+                          nil,
+                          "with the format %Y/%m/%e %H:%M"
           end
         end
       end
@@ -313,6 +471,32 @@ RSpec.shared_examples 'validates type' do
 
         it_behaves_like 'an element of an array with type error'
       end
+
+      context 'when extend_boolean_true_values is set' do
+        let(:extend_boolean_true_values) { ['t', 'yes'] }
+
+        let(:key_value) { extend_boolean_true_values.sample }
+
+        before do
+          reload('lib/request_params_validation/params/constants')
+          post :dummy, body: request_params.to_json, as: :json
+        end
+
+        it { expect(response).to have_http_status(200) }
+      end
+
+      context 'when extend_boolean_false_values is set' do
+        let(:extend_boolean_false_values) { ['n', 'no'] }
+
+        let(:key_value) { extend_boolean_false_values.sample }
+
+        before do
+          reload('lib/request_params_validation/params/constants')
+          post :dummy, body: request_params.to_json, as: :json
+        end
+
+        it { expect(response).to have_http_status(200) }
+      end
     end
 
     context 'when type is email' do
@@ -338,6 +522,44 @@ RSpec.shared_examples 'validates type' do
         end
 
         it_behaves_like 'an element of an array with type error'
+      end
+    end
+
+    context 'when types are extended' do
+      module CustomTypeValidations
+        def valid_custom_type?(value)
+          value == 'custom'
+        end
+      end
+
+      let(:extend_types) { CustomTypeValidations }
+
+      let(:key_type) { [:custom_type, 'custom_type'].sample }
+
+      let(:key_value) { 'custom' }
+
+      before do
+        reload('lib/request_params_validation/params/validators/type')
+        reload('lib/request_params_validation/params/validator')
+        post :dummy, body: request_params.to_json, as: :json
+      end
+
+      it { expect(response).to have_http_status(200) }
+
+      context 'when parameter value is not a valid custom_type' do
+        let(:key_value) { 'custom!' }
+
+        it { expect(response).to have_http_status(422) }
+
+        it 'returns the correct error message' do
+          expect(response.body).to eq(
+            build_error_response(
+              :invalid_param,
+              param_key: :key,
+              details: "Value should be a valid custom_type"
+            )
+          )
+        end
       end
     end
 

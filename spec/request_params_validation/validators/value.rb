@@ -11,7 +11,7 @@ RSpec.shared_examples 'validates value size' do
 
     let(:request_params) { { key: key_value } }
 
-    before { post :dummy, body: request_params.to_json, as: :json }
+    before { post :dummy, body: request_params.to_json, as: :json rescue nil }
 
     context 'when only the min option is set' do
       let(:min) { 1_000 }
@@ -47,6 +47,38 @@ RSpec.shared_examples 'validates value size' do
         end
 
         it_behaves_like 'an element of an array with value error'
+
+        describe 'custom exception for value validations' do
+          class CustomExceptionOnValueValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_invalid_parameter_value_size) { CustomExceptionOnValueValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnValueValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: nil,
+              param_value: key_value,
+              min: min,
+              max: max,
+              details: "Value should be greater or equal than #{min}"
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnValueValidation,
+              'Error on custom exception'
+            )
+          end
+        end
       end
     end
 

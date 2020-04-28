@@ -64,9 +64,25 @@ RSpec.shared_examples 'coerce params' do
       context 'when the precision option is set' do
         let(:decimal_precision) { 3 }
 
+        it { expect(subject(6.2)).to be_float_with_value(6.2) }
         it { expect(subject(0.12321)).to be_float_with_value(0.123) }
         it { expect(subject(100.55268)).to be_float_with_value(100.553) }
         it { expect(subject('0.999999999')).to be_float_with_value(1) }
+        it { expect(subject('45')).to be_float_with_value(45.0) }
+      end
+
+      context 'when the global format precision is set' do
+        let(:format_decimal_precision) { 2 }
+
+        it { expect(subject(0.1291823)).to be_float_with_value(0.13) }
+        it { expect(subject(55.55268)).to be_float_with_value(55.55) }
+
+        context 'when local option precision is set' do
+          let(:decimal_precision) { 4 }
+
+          it { expect(subject(0.1291823)).to be_float_with_value(0.1292) }
+          it { expect(subject(55.55268)).to be_float_with_value(55.5527) }
+        end
       end
     end
 

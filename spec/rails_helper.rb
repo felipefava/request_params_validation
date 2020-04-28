@@ -15,9 +15,8 @@ abort('The Rails environment is running in production mode!') if Rails.env.produ
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 
-# Rails.root is dummy app root
-Dir[Rails.root.join('../support/**/*.rb')].each { |f| require f }
-Dir[Rails.root.join('../helpers/**/*.rb')].each { |f| require f }
+Dir[File.dirname(__FILE__) + '/support/**/*.rb'].each { |f| require f }
+Dir[File.dirname(__FILE__) + '/helpers/**/*.rb'].each { |f| require f }
 
 RSpec.configure do |config|
   # RSpec Rails can automatically mix in different behaviours to your tests
@@ -41,6 +40,7 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include Helpers::ErrorMessages
+  config.include Helpers::ReloadFiles
 
   config.include_context 'sets configuration'
 end

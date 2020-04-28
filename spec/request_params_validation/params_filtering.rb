@@ -28,7 +28,7 @@ RSpec.shared_examples 'filter params' do
         key_2: {
           key_2__anything_1: 500,
           key_2__anything_2: [1, 2, 3],
-          key_2__anything_2: { a: 2 }
+          key_2__anything_3: { a: 2 }
         },
         key_3: ['element', 1_000, [], {}],
         key_4: [
@@ -67,7 +67,7 @@ RSpec.shared_examples 'filter params' do
         key_2: {
           key_2__anything_1: 500,
           key_2__anything_2: [1, 2, 3],
-          key_2__anything_2: { a: 2 }
+          key_2__anything_3: { a: 2 }
         },
         key_3: ['element', 1_000, [], {}],
         key_4: [

@@ -11,7 +11,7 @@ module RequestParamsValidation
     end
 
     def self.register_resource(&block)
-      raise DefinitionArgumentError.new("Expecting block for resource definition") unless block_given?
+      raise DefinitionArgumentError.new('Expecting block for resource definition') unless block_given?
 
       resource_name = resource_name_from_block(&block)
       resource = Resource.new(resource_name)

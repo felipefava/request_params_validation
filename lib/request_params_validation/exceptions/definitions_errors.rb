@@ -16,13 +16,12 @@ module RequestParamsValidation
     def initialize(error_msg, options = {})
       @error_msg = error_msg
       @resource  = options[:resource]
-      @action    = options[:action]
+
+      super(message)
     end
 
     def message
-      if resource && action
-        "Argument error for resource '#{resource}' and action '#{action}'. #{@error_msg}"
-      elsif resource
+      if resource
         "Argument error for resource '#{resource}'. #{@error_msg}"
       else
         @error_msg

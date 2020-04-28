@@ -7,6 +7,8 @@ module RequestParamsValidation
     def initialize(options)
       @param_key   = options[:param_key]
       @param_type  = options[:param_type]
+
+      super(message)
     end
 
     def message
@@ -22,6 +24,8 @@ module RequestParamsValidation
       @param_value = options[:param_value]
       @param_type  = options[:param_type]
       @details     = options[:details]
+
+      super(message)
     end
 
     def message

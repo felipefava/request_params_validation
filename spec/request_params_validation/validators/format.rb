@@ -7,7 +7,7 @@ RSpec.shared_examples 'validates format' do
 
     let(:request_params) { { key: key_value } }
 
-    before { post :dummy, body: request_params.to_json, as: :json }
+    before { post :dummy, body: request_params.to_json, as: :json rescue nil }
 
     context 'when format option is a regexp' do
       let(:format) { /^start .* end$/ }
@@ -31,6 +31,37 @@ RSpec.shared_examples 'validates format' do
         end
 
         it_behaves_like 'an element of an array with format error'
+
+        describe 'custom exception for format validations' do
+          class CustomExceptionOnFormatValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_invalid_parameter_format) { CustomExceptionOnFormatValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnFormatValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: nil,
+              param_value: key_value,
+              regexp: format,
+              details: 'Value format is invalid'
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnFormatValidation,
+              'Error on custom exception'
+            )
+          end
+        end
       end
     end
 

@@ -17,9 +17,6 @@ module RequestParamsValidation
         else
           @request
         end
-      rescue DefinitionArgumentError => e
-        e.action = name
-        raise
       end
     end
   end

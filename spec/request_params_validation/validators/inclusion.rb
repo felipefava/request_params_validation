@@ -7,11 +7,11 @@ RSpec.shared_examples 'validates inclusion' do
 
     let(:request_params) { { key: key_value } }
 
-    before { post :dummy, body: request_params.to_json, as: :json }
+    before { post :dummy, body: request_params.to_json, as: :json rescue nil }
 
     context 'when inclusion option is an array' do
-      let(:inclusion_in) { [1, 'some value', false] }
-      let(:inclusion) { inclusion_in }
+      let(:include_in) { [1, 'some value', false] }
+      let(:inclusion) { include_in }
 
       let(:key_value) { inclusion.sample }
 
@@ -32,12 +32,43 @@ RSpec.shared_examples 'validates inclusion' do
         end
 
         it_behaves_like 'an element of an array with inclusion error'
+
+        describe 'custom exception for inclusion validations' do
+          class CustomExceptionOnInclusionValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_invalid_parameter_inclusion) { CustomExceptionOnInclusionValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnInclusionValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: nil,
+              param_value: key_value,
+              include_in: include_in,
+              details: "Value should be in #{inclusion}"
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnInclusionValidation,
+              'Error on custom exception'
+            )
+          end
+        end
       end
     end
 
     context 'when inclusion option is a hash' do
-      let(:inclusion_in) { [1, 2, 3, 4, 5] }
-      let(:inclusion) { { in: inclusion_in, message: message } }
+      let(:include_in) { [1, 2, 3, 4, 5] }
+      let(:inclusion) { { in: include_in, message: message } }
 
       let(:key_value) { inclusion[:in].sample }
 
@@ -52,7 +83,7 @@ RSpec.shared_examples 'validates inclusion' do
           expect(response.body).to eq(
             build_error_response(
               :invalid_param,
-              param_key: :key, details: "Value should be in #{inclusion_in}"
+              param_key: :key, details: "Value should be in #{include_in}"
             )
           )
         end

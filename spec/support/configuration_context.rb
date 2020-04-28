@@ -7,7 +7,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default name is :validate_params!.
       #
-      config.helper_method_name = helper_method_name if defined?(helper_method_name)
+      config.helper_method_name = defined?(helper_method_name) ? helper_method_name : :validate_params!
 
 
       # Specify the path starting from `Rails.root` where is going
@@ -19,7 +19,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default path is :'app/definitions'.
       #
-      config.definitions_path = definitions_path if defined?(definitions_path)
+      config.definitions_path = defined?(definitions_path) ? definitions_path : :'app/definitions'
 
 
       # Specify the suffix for your definitions files names.
@@ -31,7 +31,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default suffix is :_definition.
       #
-      config.definitions_suffix = definitions_suffix if defined?(definitions_suffix)
+      config.definitions_suffix = defined?(definitions_suffix) ? definitions_suffix : :_definition
 
 
       # The on_definition_not_found option accepts two values: :nothing or :raise.
@@ -43,7 +43,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default value is :nothing.
       #
-      config.on_definition_not_found = on_definition_not_found if defined?(on_definition_not_found)
+      config.on_definition_not_found = defined?(on_definition_not_found) ? on_definition_not_found : :nothing
 
 
       # Set the filter_params to true if you want to overwrite the params and
@@ -52,7 +52,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default value is true.
       #
-      config.filter_params = filter_params if defined?(filter_params)
+      config.filter_params = defined?(filter_params) ? filter_params : true
 
 
       # If you want for some reason to save the original params in an instance variable before
@@ -63,7 +63,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default value is false.
       #
-      config.save_original_params = save_original_params if defined?(save_original_params)
+      config.save_original_params = defined?(save_original_params) ? save_original_params : false
 
 
       # Rails automatically adds the keys 'controller' and 'action' to the params object. The gem
@@ -75,7 +75,7 @@ RSpec.shared_context 'sets configuration' do
       #
       # The default value is [].
       #
-      config.remove_keys_from_params = remove_keys_from_params if defined?(remove_keys_from_params)
+      config.remove_keys_from_params = defined?(remove_keys_from_params) ? remove_keys_from_params : []
 
 
       # Extension configuration goes here. Here you can extend behaviours and
@@ -100,7 +100,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is false.
         #
-        extend.types = extend_types if defined?(extend_types)
+        extend.types = defined?(extend_types) ? extend_types : false
 
 
         # Add boolean true values that you want the gem to manage, behalf the default ones,
@@ -111,7 +111,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is []
         #
-        extend.boolean_true_values = extend_boolean_true_values if defined?(extend_boolean_true_values)
+        extend.boolean_true_values = defined?(extend_boolean_true_values) ? extend_boolean_true_values : []
 
 
         # Add boolean false values that you want the gem to manage, behalf the default ones,
@@ -122,7 +122,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is []
         #
-        extend.boolean_false_values = extend_boolean_false_values if defined?(extend_boolean_false_values)
+        extend.boolean_false_values = defined?(extend_boolean_false_values) ? extend_boolean_false_values : []
       end
 
 
@@ -145,7 +145,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is nil.
         #
-        format.date = format_date if defined?(format_date)
+        format.date = defined?(format_date) ? format_date : nil
 
 
         # Specify the format for the type "datetime". If not format is specified
@@ -160,7 +160,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is nil.
         #
-        format.datetime = format_datetime if defined?(format_datetime)
+        format.datetime = defined?(format_datetime) ? format_datetime : nil
 
 
         # Specify the precision for the type "decimal". This option will not validate the decimal
@@ -172,7 +172,7 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is nil. That means, no round.
         #
-        format.decimal_precision = format_decimal_precision if defined?(format_decimal_precision)
+        format.decimal_precision = defined?(format_decimal_precision) ? format_decimal_precision : nil
       end
 
 
@@ -198,9 +198,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::MissingParameterError.
         #
-        if defined?(exception_on_missing_parameter)
-          exception.on_missing_parameter = exception_on_missing_parameter
-        end
+        exception.on_missing_parameter = if defined?(exception_on_missing_parameter)
+                                           exception_on_missing_parameter
+                                         else
+                                           RequestParamsValidation::MissingParameterError
+                                         end
 
 
         # Here you can set your custom exception class to be raisen when the parameter type
@@ -215,9 +217,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_type)
-          exception.on_invalid_parameter_type = exception_on_invalid_parameter_type
-        end
+        exception.on_invalid_parameter_type = if defined?(exception_on_invalid_parameter_type)
+                                                exception_on_invalid_parameter_type
+                                              else
+                                                RequestParamsValidation::InvalidParameterValueError
+                                              end
 
 
         # Here you can set your custom exception class to be raisen when the parameter inclusion
@@ -233,9 +237,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_inclusion)
-          exception.on_invalid_parameter_inclusion = exception_on_invalid_parameter_inclusion
-        end
+        exception.on_invalid_parameter_inclusion = if defined?(exception_on_invalid_parameter_inclusion)
+                                                     exception_on_invalid_parameter_inclusion
+                                                   else
+                                                     RequestParamsValidation::InvalidParameterValueError
+                                                   end
 
 
         # Here you can set your custom exception class to be raisen when the parameter length
@@ -252,9 +258,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_length)
-          exception.on_invalid_parameter_length = exception_on_invalid_parameter_length
-        end
+        exception.on_invalid_parameter_length = if defined?(exception_on_invalid_parameter_length)
+                                                  exception_on_invalid_parameter_length
+                                                else
+                                                  RequestParamsValidation::InvalidParameterValueError
+                                                end
 
 
         # Here you can set your custom exception class to be raisen when the parameter value
@@ -271,9 +279,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_value_size)
-          exception.on_invalid_parameter_value_size = exception_on_invalid_parameter_value_size
-        end
+        exception.on_invalid_parameter_value_size = if defined?(exception_on_invalid_parameter_value_size)
+                                                      exception_on_invalid_parameter_value_size
+                                                    else
+                                                      RequestParamsValidation::InvalidParameterValueError
+                                                    end
 
 
         # Here you can set your custom exception class to be raisen when the parameter format
@@ -289,9 +299,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_format)
-          exception.on_invalid_parameter_format = exception_on_invalid_parameter_format
-        end
+        exception.on_invalid_parameter_format = if defined?(exception_on_invalid_parameter_format)
+                                                  exception_on_invalid_parameter_format
+                                                else
+                                                  RequestParamsValidation::InvalidParameterValueError
+                                                end
 
 
         # Here you can set your custom exception class to be raisen when the parameter validate
@@ -306,9 +318,11 @@ RSpec.shared_context 'sets configuration' do
         #
         # The default value is RequestParamsValidation::InvalidParameterValueError.
         #
-        if defined?(exception_on_invalid_parameter_custom_validation)
-          exception.on_invalid_parameter_custom_validation = exception_on_invalid_parameter_custom_validation
-        end
+        exception.on_invalid_parameter_custom_validation = if defined?(exception_on_invalid_parameter_custom_validation)
+                                                             exception_on_invalid_parameter_custom_validation
+                                                           else
+                                                             RequestParamsValidation::InvalidParameterValueError
+                                                           end
       end
     end
 

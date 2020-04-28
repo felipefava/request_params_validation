@@ -7,7 +7,7 @@ RSpec.shared_examples 'validates length' do
 
     let(:request_params) { { key: key_value } }
 
-    before { post :dummy, body: request_params.to_json, as: :json }
+    before { post :dummy, body: request_params.to_json, as: :json rescue nil }
 
     context 'when length option is an integer' do
       let(:min) { 4 }
@@ -33,6 +33,38 @@ RSpec.shared_examples 'validates length' do
         end
 
         it_behaves_like 'an element of an array with length error'
+
+        describe 'custom exception for length validations' do
+          class CustomExceptionOnLengthValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_invalid_parameter_length) { CustomExceptionOnLengthValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnLengthValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: nil,
+              param_value: key_value,
+              min: min,
+              max: max,
+              details: "Length should be equal to #{length}"
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnLengthValidation,
+              'Error on custom exception'
+            )
+          end
+        end
       end
     end
 

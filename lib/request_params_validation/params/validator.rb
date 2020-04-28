@@ -10,11 +10,12 @@ module RequestParamsValidation
         include Validators.const_get(validator)
       end
 
-      attr_reader :param, :value
+      attr_reader :param, :value, :original_value
 
       def initialize(param_definition, value)
         @param = param_definition
         @value = value
+        @original_value = value
       end
 
       def validate_and_coerce
@@ -60,7 +61,11 @@ module RequestParamsValidation
       end
 
       def raise_error(exception_type, options = {})
-        options = options.merge(param_key: param.key, param_value: value, param_type: param.type)
+        options = options.merge(
+          param_key: param.key,
+          param_value: original_value,
+          param_type: param.type
+        )
 
         raise RequestParamsValidation.exceptions.send(exception_type).new(options)
       end

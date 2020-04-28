@@ -1,6 +1,6 @@
-RSpec.shared_examples 'an element of an array with type error' do |key_type_translation|
+RSpec.shared_examples 'an element of an array with type error' do |key_type_translation, msg_details|
   let(:define_params) do
-    -> (params) { params.optional :key, type: :array, elements: key_type }
+    -> (params) { params.optional :key, type: :array, elements: { type: key_type, format: format } }
   end
 
   let(:request_params) { { key: [key_value] } }
@@ -10,7 +10,8 @@ RSpec.shared_examples 'an element of an array with type error' do |key_type_tran
       build_error_response(
         :invalid_param,
         param_key: :key,
-        details: "All elements of the array should be a valid #{key_type_translation || key_type}"
+        details: "All elements of the array should be a valid " \
+                 "#{key_type_translation || key_type}#{msg_details && " #{msg_details}"}"
       )
     )
   end
@@ -27,7 +28,7 @@ RSpec.shared_examples 'an element of an array with inclusion error' do
     details = if message
                 message
               else
-                "All elements values of the array should be in #{inclusion_in}"
+                "All elements values of the array should be in #{include_in}"
               end
 
     expect(response.body).to eq(

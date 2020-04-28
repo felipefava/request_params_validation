@@ -2,7 +2,7 @@ RSpec.shared_examples 'validates presence' do
   describe 'presence validator' do
     let(:request_params) { { key: key_value } }
 
-    before { post :dummy, body: request_params.to_json, as: :json }
+    before { post :dummy, body: request_params.to_json, as: :json rescue nil }
 
     context 'when the parameter is optional' do
       let(:define_params) { -> (params) { params.optional :key } }
@@ -33,6 +33,35 @@ RSpec.shared_examples 'validates presence' do
 
         it 'returns the correct error message' do
           expect(response.body).to eq(build_error_response(:missing_param, param_key: :key))
+        end
+
+        describe 'custom exception for presence validations' do
+          class CustomExceptionOnPresenceValidation < StandardError
+            def initialize(options)
+              super('Error on custom exception')
+            end
+          end
+
+          let(:exception_on_missing_parameter) { CustomExceptionOnPresenceValidation }
+
+          subject { post :dummy, body: request_params.to_json, as: :json }
+
+          it 'calls the exception with the right parameters' do
+            expect(CustomExceptionOnPresenceValidation).to receive(:new).with(
+              param_key: :key,
+              param_type: nil,
+              param_value: key_value
+            )
+
+            subject rescue nil
+          end
+
+          it 'raises the right exception' do
+            expect { subject }.to raise_error(
+              CustomExceptionOnPresenceValidation,
+              'Error on custom exception'
+            )
+          end
         end
       end
 
