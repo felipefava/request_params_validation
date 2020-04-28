@@ -504,7 +504,7 @@ the table below:
 | Failure                   | Default Message                                      |
 | ------------------------- | ---------------------------------------------------- |
 | Missing parameter         | N/A                                                  |
-| Invalid type              | - `Value should be a valid %{param_type}` <br> - `All elements of the array should be a valid %{type}` <br> If has `date` or `datetime` type with specified `format`: <br> &nbsp;&nbsp;&nbsp; - ` with the format %{format}` string is concatenated |
+| Invalid type              | - `Value should be a valid %{param_type}` <br> - `All elements of the array should be a valid %{type}` <br> If has `date` or `datetime` type with specified `format`: <br> &nbsp;&nbsp;&nbsp; - ` with the format %{format}` is added to the message |
 | Invalid inclusion         | - `Value should be in %{include_in}` <br> - `All elements values of the array should have be in %{include_in}` |
 | Invalid length            | - `Length should be greater or equal than %{min}` <br> - `Length should be less or equal than %{max}`  <br> - `Length should be equal to %{min/max}` </br> - `Length should be between %{min} and %{max}` <br> - `All elements of the array should have a length ...` |
 | Invalid value size        | - `Value should be greater or equal than %{min}` <br> - `Value should be less or equal than %{max}` <br> - `Value should be between %{min} and %{max}` <br> - `All elements of the array should have a value ...` |
@@ -533,9 +533,8 @@ To see a complete initializer file of the configuration with all the options and
 please see [here](./examples/initializer.rb).
 
 ## Future Work
-In the near future the plan is to continue adding features to the gem. In order of
-importance, next changes are:
-- Add tests
+In the near future the plan is to continue adding features to the gem. Next incoming changes
+could be:
 - Add doc generation from the definitions
 - Add representations for DRY definitions
 - Add more options to the actions definitions
