@@ -1,6 +1,8 @@
 # RequestParamsValidation
 _Request parameters validations, type coercion and filtering for Rails params_
 
+[![CircleCI](https://circleci.com/gh/felipefava/request_params_validation.svg?style=shield&circle-token=a404cb4fd87e219299caeb36e1685ab75d335b84)](https://circleci.com/gh/felipefava/request_params_validation)
+
 ## Introduction
 Validates the request params outside your controller logic in order to get a clean nice code, and
 also working as code documentation for the operations. It ensure that all endpoints input data is
