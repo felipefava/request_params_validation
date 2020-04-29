@@ -1,4 +1,5 @@
-$:.push File.expand_path("lib", __dir__)
+lib = File.expand_path('../lib', __FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 require 'request_params_validation/version'
 
@@ -17,5 +18,5 @@ Gem::Specification.new do |spec|
 
   spec.files         = Dir["{lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  spec.add_dependency 'rails', '>= 5'
+  spec.add_dependency 'rails', '>= 3'
 end

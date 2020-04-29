@@ -17,7 +17,7 @@ module RequestParamsValidation
       extra_keys = [:controller, :action] # Keys added by Rails
 
       filter_params(definition, params, extra_keys).tap do |params|
-        params.permit! if params.is_a?(ActionController::Parameters)
+        params.permit! if params.respond_to?(:permit!)
       end
     end
 

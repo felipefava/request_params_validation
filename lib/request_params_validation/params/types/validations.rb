@@ -8,6 +8,8 @@ module RequestParamsValidation
 
         def valid_hash?(value)
           value.is_a?(Hash) || value.is_a?(ActionController::Parameters)
+        rescue NameError # For older versions of Rails
+          false
         end
 
         def valid_string?(value)
