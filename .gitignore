@@ -2,6 +2,8 @@
 log/*.log
 pkg/
 
+*.gem
+
 coverage/
 
 spec/dummy/log/*.log

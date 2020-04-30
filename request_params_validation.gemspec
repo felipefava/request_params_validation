@@ -8,10 +8,10 @@ Gem::Specification.new do |spec|
   spec.version       = RequestParamsValidation::VERSION
   spec.authors       = 'Felipe Fava'
   spec.email         = 'felipefava5@gmail.com'
-  spec.homepage      = "https://github.com/felipefava/request_validation"
+  spec.homepage      = "https://github.com/felipefava/request_params_validation"
   spec.license       = 'MIT'
 
-  spec.summary       = 'Validates request params'
+  spec.summary       = 'Validates rails request params'
   spec.description   = 'It validates request params outside your controller logic in order to ' \
                        'get a clean and nice code, and also helping with the documentation of ' \
                        'the operations.'

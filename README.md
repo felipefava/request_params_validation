@@ -387,7 +387,7 @@ also accepts the `message` option.
 ```ruby
 some_action.request do |params|
   params.required :key_1, type: :date, validate: { function: lambda { |value| value >= Date.today },
-                                                   message: 'The date can not be in the past.' }
+                                                   message: 'The date can not be in the past' }
 end
 ```
 
