@@ -26,7 +26,7 @@ RSpec.shared_examples 'validates custom validations' do
 
         describe 'custom exception for custom validations' do
           class CustomExceptionOnCustomValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end
@@ -57,16 +57,16 @@ RSpec.shared_examples 'validates custom validations' do
     end
 
     context 'when custom validation option is a hash' do
-      let(:function) { -> (value) { value >= Date.today } }
+      let(:function) { -> (value) { value >= Time.zone.today } }
       let(:message) { nil }
       let(:custom_validation) { { function: function, message: message } }
 
-      let(:key_value) { Date.today.to_s }
+      let(:key_value) { Time.zone.today.to_s }
 
       it { expect(response).to have_http_status(200) }
 
       context 'when parameter value is invalid' do
-        let(:key_value) { Date.today.prev_day.to_s }
+        let(:key_value) { Time.zone.today.prev_day.to_s }
 
         it { expect(response).to have_http_status(422) }
 

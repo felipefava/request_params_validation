@@ -6,7 +6,7 @@ RSpec.describe ApplicationController, type: :controller  do
     let(:array_elements) { nil }
 
     let(:define_params) do
-      -> (params) do
+      lambda do |params|
         params.optional :string, type: :string
         params.optional :integer, type: :integer
         params.optional :decimal, type: :decimal, precision: decimal_precision
@@ -170,7 +170,7 @@ RSpec.describe ApplicationController, type: :controller  do
 
       context 'when has nested params' do
         let(:define_params) do
-          -> (params) do
+          lambda do |params|
             params.optional :hash, type: :hash do |nested_hash|
               nested_hash.required :nested_key_1, type: :date
               nested_hash.required :nested_key_2, type: :integer
@@ -181,11 +181,11 @@ RSpec.describe ApplicationController, type: :controller  do
 
         it 'coerces the nested params to the right type' do
           expect(subject({
-            nested_key_1: Date.today.to_s,
+            nested_key_1: Time.zone.today.to_s,
             nested_key_2: '200',
             nested_key_3: 'John'
           })).to be_hash_with_value({
-            nested_key_1: Date.today,
+            nested_key_1: Time.zone.today,
             nested_key_2: 200,
             nested_key_3: 'John'
           })

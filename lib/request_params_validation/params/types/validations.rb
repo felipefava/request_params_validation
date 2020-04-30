@@ -12,7 +12,7 @@ module RequestParamsValidation
           false
         end
 
-        def valid_string?(value)
+        def valid_string?(_value)
           true
         end
 

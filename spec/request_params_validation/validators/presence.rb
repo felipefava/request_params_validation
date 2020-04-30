@@ -37,7 +37,7 @@ RSpec.shared_examples 'validates presence' do
 
         describe 'custom exception for presence validations' do
           class CustomExceptionOnPresenceValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end

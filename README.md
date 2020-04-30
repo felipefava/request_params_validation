@@ -1,6 +1,7 @@
 # RequestParamsValidation
 _Request parameters validations, type coercion and filtering for Rails params_
 
+[![Gem Version](https://badge.fury.io/rb/request_params_validation.svg)](https://badge.fury.io/rb/request_params_validation)
 [![CircleCI](https://circleci.com/gh/felipefava/request_params_validation.svg?style=shield&circle-token=a404cb4fd87e219299caeb36e1685ab75d335b84)](https://circleci.com/gh/felipefava/request_params_validation)
 
 ## Introduction
@@ -179,15 +180,15 @@ end
 ### Types
 The `type` option specified the type of the parameter. The supported types are:
 
-1. hash
-2. array
-3. string
-4. integer
-5. decimal
-6. boolean
-7. date
-9. datetime
-9. email
+1.  hash
+2.  array
+3.  string
+4.  integer
+5.  decimal
+6.  boolean
+7.  date
+8.  datetime
+9.  email
 
 So if this option is present, the gem will validate that the value of the parameter matches with
 the specified type. And if it does, it will convert the value to the right type. This means that
@@ -282,10 +283,11 @@ will be converter to a Date object like  `Wed, 04 Oct 1995`.
 However, they are cases when you only want to accept a specific format for a date, like
 `"%Y-%m-%e"`. In this cases you have two options.
 
-1. Use the global configuration option `format.date`, so all date types must have the specified
-   format through all the requests. See [here](#configuration) all globals configuration
-   options.
-2. Specify the option `format: "%Y-%m-%e"` locally.
+1.  Use the global configuration option `format.date`, so all date types must have the specified
+    format through all the requests. See [here](#configuration) all globals configuration
+    options.
+
+2.  Specify the option `format: "%Y-%m-%e"` locally.
 
 You can perfectly use both approaches, but the second one will locally override the first one on
 that parameter validation.
@@ -442,7 +444,7 @@ end
 ```
 
 ---
-**NOTE**
+### NOTE
 
 RequestParamsValidation will start validating the presence of the parameters. Then, if the value is
 not present and the parameter has a default value, it will assign that value and not execute any
@@ -450,8 +452,8 @@ further validation. Otherwise, it will validate the type, convert it to the righ
 continue with the others validations. So, all others validations will be executed with the parameter
 value already converter to the specified type, so keep in mind that at defining the validations.
 
-
 ## Errors & Messages
+
 For default, when a required parameter failed the presence validation, the exception
 `RequestParamsValidation::MissingParameterError` will be raised. If it failed for any of the others
 validations, the raised exception will be `RequestParamsValidation::InvalidParameterValueError`
@@ -502,17 +504,15 @@ an element of an array or not. If you **have specified the `message` option in t
 definition**, then the details will be that value, otherwise it will took a default value from
 the table below:
 
-
-| Failure                   | Default Message                                      |
-| ------------------------- | ---------------------------------------------------- |
-| Missing parameter         | N/A                                                  |
-| Invalid type              | - `Value should be a valid %{param_type}` <br> - `All elements of the array should be a valid %{type}` <br> If has `date` or `datetime` type with specified `format`: <br> &nbsp;&nbsp;&nbsp; - ` with the format %{format}` is added to the message |
-| Invalid inclusion         | - `Value should be in %{include_in}` <br> - `All elements values of the array should have be in %{include_in}` |
-| Invalid length            | - `Length should be greater or equal than %{min}` <br> - `Length should be less or equal than %{max}`  <br> - `Length should be equal to %{min/max}` </br> - `Length should be between %{min} and %{max}` <br> - `All elements of the array should have a length ...` |
-| Invalid value size        | - `Value should be greater or equal than %{min}` <br> - `Value should be less or equal than %{max}` <br> - `Value should be between %{min} and %{max}` <br> - `All elements of the array should have a value ...` |
-| Invalid format            | - `Value format is invalid` <br> - `An element of the array has an invalid format` |
-| Invalid custom validation | N/A                                                  |
-
+| Failure                   | Default Message                                                                                                                                                                                                                                                      |
+| ------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Missing parameter         | N/A                                                                                                                                                                                                                                                                  |
+| Invalid type              | - `Value should be a valid %{param_type}` <br> - `All elements of the array should be a valid %{type}` <br> If has `date` or `datetime` type with specified `format`: <br> &nbsp;&nbsp;&nbsp; - ` with the format %{format}` is added to the message                 |
+| Invalid inclusion         | - `Value should be in %{include_in}` <br> - `All elements values of the array should have be in %{include_in}`                                                                                                                                                       |
+| Invalid length            | - `Length should be greater or equal than %{min}` <br> - `Length should be less or equal than %{max}` <br> - `Length should be equal to %{min/max}` </br> - `Length should be between %{min} and %{max}` <br> - `All elements of the array should have a length ...` |
+| Invalid value size        | - `Value should be greater or equal than %{min}` <br> - `Value should be less or equal than %{max}` <br> - `Value should be between %{min} and %{max}` <br> - `All elements of the array should have a value ...`                                                    |
+| Invalid format            | - `Value format is invalid` <br> - `An element of the array has an invalid format`                                                                                                                                                                                   |
+| Invalid custom validation | N/A                                                                                                                                                                                                                                                                  |                                               |
 
 ### Custom Exceptions
 However, if the above is not enough for your app, and you need to fully customize the exceptions
@@ -537,21 +537,21 @@ please see [here](./examples/initializer.rb).
 ## Future Work
 In the near future the plan is to continue adding features to the gem. Next incoming changes
 could be:
-- Add doc generation from the definitions
-- Add representations for DRY definitions
-- Add more options to the actions definitions
-- Add handler for responses
+-   Add doc generation from the definitions
+-   Add representations for DRY definitions
+-   Add more options to the actions definitions
+-   Add handler for responses
 
 ## Acknowledgments
 This gem is strongly inspired in a Ruby framework named [Angus](https://github.com/moove-it/angus)
 developed by [Moove It](https://moove-it.com/)
 
 ## Contributing
-1. Fork it
-2. Create your feature branch (git checkout -b my-new-feature)
-3. Commit your changes (git commit -am 'Add some feature')
-4. Push to the branch (git push origin my-new-feature)
-5. Create a Pull Request
+1.  Fork it
+2.  Create your feature branch (git checkout -b my-new-feature)
+3.  Commit your changes (git commit -am 'Add some feature')
+4.  Push to the branch (git push origin my-new-feature)
+5.  Create a Pull Request
 
 ## License
 This software is released under the MIT license. See the MIT-LICENSE file for more info.

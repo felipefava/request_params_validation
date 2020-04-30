@@ -4,7 +4,7 @@ RSpec.describe ApplicationController, type: :controller  do
     let(:remove_keys_from_params) { [] }
 
     let(:define_params) do
-      -> (params) do
+      lambda do |params|
         params.required :key_1
         params.required :key_2, type: :hash
         params.required :key_3, type: :array

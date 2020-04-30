@@ -34,7 +34,7 @@ RSpec.shared_examples 'validates format' do
 
         describe 'custom exception for format validations' do
           class CustomExceptionOnFormatValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end

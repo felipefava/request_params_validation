@@ -1,7 +1,7 @@
 RSpec.describe ApplicationController, type: :controller  do
   describe 'params transformations' do
     let(:define_params) do
-      -> (params) do
+      lambda do |params|
         params.required :no_transform
         params.required :transform_1, type: :string, transform: :strip
         params.required :transform_2, type: :integer, transform: -> (value) { value * 10 }

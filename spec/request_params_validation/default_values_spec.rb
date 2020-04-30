@@ -1,7 +1,7 @@
 RSpec.describe ApplicationController, type: :controller  do
   describe 'params default values' do
     let(:define_params) do
-      -> (params) do
+      lambda do |params|
         params.optional :no_default
         params.optional :default_value, default: 'Default optional'
         params.optional :default_proc, default: -> () { [Time.now] }

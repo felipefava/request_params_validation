@@ -36,7 +36,7 @@ RSpec.shared_examples 'validates length' do
 
         describe 'custom exception for length validations' do
           class CustomExceptionOnLengthValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end

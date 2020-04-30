@@ -57,7 +57,7 @@ module RequestParamsValidation
       end
 
       def iterate_hash
-        Params::validate!(param.sub_definition, value) # recursion for the sub_definition
+        Params.validate!(param.sub_definition, value) # recursion for the sub_definition
       end
 
       def raise_error(exception_type, options = {})

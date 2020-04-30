@@ -35,7 +35,7 @@ RSpec.shared_examples 'validates inclusion' do
 
         describe 'custom exception for inclusion validations' do
           class CustomExceptionOnInclusionValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end

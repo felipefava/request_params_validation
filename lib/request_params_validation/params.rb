@@ -16,8 +16,8 @@ module RequestParamsValidation
     def self.filter!(definition, params)
       extra_keys = [:controller, :action] # Keys added by Rails
 
-      filter_params(definition, params, extra_keys).tap do |params|
-        params.permit! if params.respond_to?(:permit!)
+      filter_params(definition, params, extra_keys).tap do |filtered_params|
+        filtered_params.permit! if filtered_params.respond_to?(:permit!)
       end
     end
 

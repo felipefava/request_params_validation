@@ -44,7 +44,7 @@ RSpec.shared_examples 'validates type' do
 
         describe 'custom exception for type validations' do
           class CustomExceptionOnTypeValidation < StandardError
-            def initialize(options)
+            def initialize(_options)
               super('Error on custom exception')
             end
           end
@@ -154,7 +154,7 @@ RSpec.shared_examples 'validates type' do
     context 'when type is date' do
       let(:key_type) { [:date, 'date'].sample }
 
-      let(:key_value) { Date.today.to_s }
+      let(:key_value) { Time.zone.today.to_s }
 
       it { expect(response).to have_http_status(200) }
 
