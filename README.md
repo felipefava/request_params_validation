@@ -95,15 +95,15 @@ and `notify`:
 
 class UsersController < ApplicationController
   def create
-    ...
+    params # will have only the defined parameters
   end
 
   def notify
-    ...
+    params # will have only the defined parameters
   end
 
   def another_action
-    ...
+    params # will have whatever the user sends
   end
 end
 ```
