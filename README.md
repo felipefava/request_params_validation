@@ -3,6 +3,7 @@ _Request parameters validations, type coercion and filtering for Rails params_
 
 [![Gem Version](https://badge.fury.io/rb/request_params_validation.svg)](https://badge.fury.io/rb/request_params_validation)
 [![CircleCI](https://circleci.com/gh/felipefava/request_params_validation.svg?style=shield&circle-token=a404cb4fd87e219299caeb36e1685ab75d335b84)](https://circleci.com/gh/felipefava/request_params_validation)
+[![Codacy Quality Badge](https://api.codacy.com/project/badge/Grade/6ed6582228bd429a94dfabaa82071455)](https://www.codacy.com/manual/felipefava/request_params_validation?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=felipefava/request_params_validation&amp;utm_campaign=Badge_Grade)
 
 ## Introduction
 Validates the request params outside your controller logic in order to get a clean nice code, and
