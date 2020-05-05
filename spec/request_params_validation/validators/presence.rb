@@ -35,6 +35,12 @@ RSpec.shared_examples 'validates presence' do
           expect(response.body).to eq(build_error_response(:missing_param, param_key: :key))
         end
 
+        context 'when parameter value is false' do
+          let(:key_value) { false }
+
+          it { expect(response).to have_http_status(200) }
+        end
+
         describe 'custom exception for presence validations' do
           class CustomExceptionOnPresenceValidation < StandardError
             def initialize(_options)

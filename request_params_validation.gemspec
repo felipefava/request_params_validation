@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = RequestParamsValidation::VERSION
   spec.authors       = 'Felipe Fava'
   spec.email         = 'felipefava5@gmail.com'
-  spec.homepage      = "https://github.com/felipefava/request_params_validation"
+  spec.homepage      = 'https://github.com/felipefava/request_params_validation'
   spec.license       = 'MIT'
 
   spec.summary       = 'Validates rails request params'
@@ -16,7 +16,7 @@ Gem::Specification.new do |spec|
                        'get a clean and nice code, and also helping with the documentation of ' \
                        'the operations.'
 
-  spec.files         = Dir["{lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  spec.files         = Dir['{lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
 
   spec.add_dependency 'rails', '>= 3'
 end

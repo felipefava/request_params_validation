@@ -1,5 +1,4 @@
 require 'request_params_validation/params'
-require 'request_params_validation/exceptions/definitions_errors'
 
 module RequestParamsValidation
   module Definitions

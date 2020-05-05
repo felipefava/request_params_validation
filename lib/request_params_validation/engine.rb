@@ -6,12 +6,12 @@ module RequestParamsValidation
     isolate_namespace RequestParamsValidation
 
     initializer 'request_params_validation.load_definitions' do
-      RequestParamsValidation::Definitions.load_all
+      Definitions.load_all
     end
 
     initializer 'request_params_validation.add_helpers' do
       ActiveSupport.on_load :action_controller do
-        include RequestParamsValidation::Helpers
+        include Helpers
       end
     end
   end
