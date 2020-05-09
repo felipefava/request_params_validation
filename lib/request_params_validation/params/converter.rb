@@ -24,8 +24,6 @@ module RequestParamsValidation
       def self.apply_transformation(param, value)
         transform = param.transform
 
-        return value unless transform
-
         transform.respond_to?(:call) ? transform.call(value) : value.send(transform)
       end
     end

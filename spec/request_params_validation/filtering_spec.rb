@@ -2,6 +2,7 @@ RSpec.describe ApplicationController, type: :controller  do
   describe 'params filtering' do
     let(:filter_params) { true }
     let(:remove_keys_from_params) { [] }
+    let(:new_name) { nil }
 
     let(:define_params) do
       lambda do |params|
@@ -10,7 +11,7 @@ RSpec.describe ApplicationController, type: :controller  do
         params.required :key_3, type: :array
 
         params.required :key_4, type: :array, elements: :hash do |key_4|
-          key_4.required :key_4__1
+          key_4.required :key_4__1, as: new_name
           key_4.required :key_4__2
         end
 
@@ -116,6 +117,39 @@ RSpec.describe ApplicationController, type: :controller  do
       end
 
       it { expect(controller.params.permitted?).to eq(false) }
+    end
+
+    context "when 'as' option is set for a parameter" do
+      let(:new_name) { :rename_key_4__1 }
+
+      before do
+        expected_params[:key_4].map! do |value|
+          value.delete(:key_4__1)
+          value.merge(rename_key_4__1: 'key_4__1')
+        end
+      end
+
+      it { expect(controller.params).to be_hash_with_value(expected_params) }
+
+      it { expect(controller.params.permitted?).to eq(true) }
+
+      context 'when global option filter_params is disabled' do
+        let(:filter_params) { false }
+        let(:expected_params) do
+          request_params.tap do |params|
+            params[:key_4].map! do |value|
+              value.delete(:key_4__1)
+              value.merge(rename_key_4__1: 'key_4__1')
+            end
+          end
+        end
+
+        it 'does not filter the original params' do
+          expect(controller.params.to_unsafe_h).to include(expected_params)
+        end
+
+        it { expect(controller.params.permitted?).to eq(false) }
+      end
     end
   end
 end

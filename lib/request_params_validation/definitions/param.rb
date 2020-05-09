@@ -3,7 +3,7 @@ require 'request_params_validation/params'
 module RequestParamsValidation
   module Definitions
     class Param
-      attr_reader :key, :required, :allow_blank, :type, :transform, :decimal_precision,
+      attr_reader :key, :required, :allow_blank, :type, :rename_as, :transform, :decimal_precision,
                   :inclusion, :length, :value, :format, :custom_validation, :elements
 
       def initialize(options, &block)
@@ -11,6 +11,7 @@ module RequestParamsValidation
         @required    = options[:required]
         @allow_blank = options[:allow_blank]
         @type        = options[:type].try(:to_sym)
+        @rename_as   = options[:as].try(:to_sym)
         @default     = options[:default]
 
         @transform          = options[:transform]
@@ -71,6 +72,14 @@ module RequestParamsValidation
 
       def validate_custom_validation?
         !!@custom_validation
+      end
+
+      def rename?
+        !!@rename_as
+      end
+
+      def transform?
+        !!@transform
       end
 
       private

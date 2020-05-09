@@ -26,8 +26,14 @@ module RequestParamsValidation
       value = params[key]
 
       value = Validator.new(param_definition, value).validate_and_coerce
+      value = Converter.apply_transformation(param_definition, value) if param_definition.transform?
 
-      params[key] = value
+      if param_definition.rename?
+        params.delete(key)
+        params[param_definition.rename_as] = value
+      else
+        params[key] = value
+      end
     end
     private_class_method :validate_and_coerce_param
 
@@ -36,7 +42,7 @@ module RequestParamsValidation
       return params if definition.empty?
 
       params_keys = definition.map do |param_definition|
-        key = param_definition.key
+        key = param_definition.rename? ? param_definition.rename_as : param_definition.key
 
         if param_definition.sub_definition
           filter_params(param_definition.sub_definition, params[key])

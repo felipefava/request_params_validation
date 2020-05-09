@@ -401,8 +401,8 @@ the specified type.
 
 If you want to set a precision value to all `decimal` parameters, you can use the global
 configuration option `format.decimal_precision`. Keep in mind that if you set the `precision`
-option on a parameter, it will locally override the global configuration. See here for all
-globals configuration options.
+option on a parameter, it will locally override the global configuration. See [here](#configuration)
+for all globals configuration options.
 
 This option accepts an integer as value.
 
@@ -443,6 +443,18 @@ some_action.request do |params|
                   transform: lambda { |value| value.gsub(/-/, '') }
 end
 ```
+
+### Rename Parameters
+You can rename parameters using the `as` option.
+
+```ruby
+some_action.request do |params|
+  params.required :email_address, type: :email, as: :email
+end
+```
+
+This means that in the request params you expect a valid email value in the key `email_address`,
+but in your controller you will access with the key `email`.
 
 ---
 ### NOTE

@@ -45,7 +45,7 @@ module RequestParamsValidation
         validate_format!            if param.validate_format?
         validate_custom_validation! if param.validate_custom_validation?
 
-        @value = Params::Converter.apply_transformation(param, value)
+        @value
       end
 
       private
