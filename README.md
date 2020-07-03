@@ -456,6 +456,31 @@ end
 This means that in the request params you expect a valid email value in the key `email_address`,
 but in your controller you will access with the key `email`.
 
+### Dependent Parameters
+If you want to receive and validate a parameter only if another one is given, you can use
+the `is_given` option.
+
+```ruby
+some_action.request do |params|
+  params.optional :label, type: :string
+  params.required :description, type: :string, if_given: :label
+  #...
+  params.required :card_type, inclusion: %w(credit_card debit_card)
+  params.required :ccv, if_given: { card_type: lambda { |value| value == 'credit_card' } }
+end
+```
+
+On the example above, the param `description` will be only validated if the param `label` is present.
+RequestParamsValidation will use the method `blank?` to check that. On the other hand, the param
+`ccv` will only be validated if the param `type_card` is equal to the string `credit_card`.
+
+Notice that if the global option `filter_params` is set to `true` (default behaviour), then the
+dependent parameters will be filtered from the `params object` if they haven't beeen validated.
+This way we make sure to only receive those parameters that have been validated against our request
+definitions.
+
+Be aware that if you rename a param, then you should use the new name in the `if_given` option.
+
 ---
 ### NOTE
 

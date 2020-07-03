@@ -7,6 +7,8 @@ module RequestParamsValidation
 
     def self.validate!(definition, params)
       definition.each do |param_definition|
+        next if param_definition.skip?(params)
+
         validate_and_coerce_param(param_definition, params)
       end
 
@@ -42,6 +44,8 @@ module RequestParamsValidation
       return params if definition.empty?
 
       params_keys = definition.map do |param_definition|
+        next if param_definition.skip?(params)
+
         key = param_definition.rename? ? param_definition.rename_as : param_definition.key
 
         if param_definition.sub_definition

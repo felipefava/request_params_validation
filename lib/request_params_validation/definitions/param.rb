@@ -4,7 +4,7 @@ module RequestParamsValidation
   module Definitions
     class Param
       attr_reader :key, :required, :allow_blank, :type, :rename_as, :transform, :decimal_precision,
-                  :inclusion, :length, :value, :format, :custom_validation, :elements
+                  :inclusion, :length, :value, :format, :custom_validation, :if_given, :elements
 
       def initialize(options, &block)
         @key         = options[:key]
@@ -23,6 +23,7 @@ module RequestParamsValidation
         @value              = build_value_option(options[:value])
         @format             = build_format_option(options[:format])
         @custom_validation  = build_custom_validation_option(options[:validate])
+        @if_given           = build_if_given_option(options[:if_given])
 
         @elements           = build_elements_option(options[:elements], &block)
         @sub_definition     = build_sub_definition(&block)
@@ -80,6 +81,18 @@ module RequestParamsValidation
 
       def transform?
         !!@transform
+      end
+
+      def skip?(request_params)
+        return false unless @if_given
+
+        if_given_param_value = request_params[@if_given.param]
+
+        if @if_given.function
+          !@if_given.function.call(if_given_param_value)
+        else
+          if_given_param_value.blank?
+        end
       end
 
       private
@@ -156,6 +169,20 @@ module RequestParamsValidation
         return unless function
 
         Struct.new(:function, :message).new(function, message)
+      end
+
+      def build_if_given_option(if_given)
+        case if_given
+        when String, Symbol
+          param = if_given.to_sym
+        when Hash
+          param = if_given.first.try(:first)
+          function = if_given.first.try(:last)
+        end
+
+        return unless param
+
+        Struct.new(:param, :function).new(param, function)
       end
 
       def build_elements_option(elements, &block)
