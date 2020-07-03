@@ -115,7 +115,7 @@ Then, we will need to create the definition for the `users` resource:
 
 RequestParamsValidation.define do |users|
   users.action :create do |create|
-    users.request do |params|
+    create.request do |params|
       params.required :user, type: :hash do |user|
         user.required :first_name, type: :string
         user.required :last_name, type: :string
