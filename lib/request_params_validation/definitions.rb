@@ -5,9 +5,9 @@ module RequestParamsValidation
   module Definitions
     @@definitions = {}
 
-    def self.load_all
+    def self.load_all(use_load = false)
       definitions_suffix = RequestParamsValidation.definitions_suffix
-      Dir["#{definitions_path}/**/*#{definitions_suffix}.rb"].each { |file| load file }
+      Dir["#{definitions_path}/**/*#{definitions_suffix}.rb"].each { |f| use_load ? load(f) : require(f) }
     end
 
     def self.register_resource(&block)

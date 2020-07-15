@@ -331,6 +331,6 @@ RSpec.shared_context 'sets configuration' do
 
     # Hack to allow changing the gem configuration on runtime (only for tests purpose)
     RequestParamsValidation::Definitions.class_variable_set(:@@definitions, {})
-    RequestParamsValidation::Definitions.load_all
+    RequestParamsValidation::Definitions.load_all(true)
   end
 end
