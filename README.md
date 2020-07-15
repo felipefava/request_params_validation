@@ -245,7 +245,7 @@ some_action.request do |params|
   params.required :key_1, type: :array
 
   # Only allows decimals with a value less than 1_000 for the elements of the array
-  params.required :key_2, type: :array, elements: { type: :decimal, value: { max: 1_000 }
+  params.required :key_2, type: :array, elements: { type: :decimal, value: { max: 1_000 } }
 
   # Only allows objects with a required key 'nested_key' of type 'email' for the
   # elements of the array
