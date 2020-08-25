@@ -2,7 +2,6 @@ RSpec.describe ApplicationController, type: :controller  do
   describe 'params filtering' do
     let(:filter_params) { true }
     let(:remove_keys_from_params) { [] }
-    let(:new_name) { nil }
 
     let(:define_params) do
       lambda do |params|
@@ -11,7 +10,7 @@ RSpec.describe ApplicationController, type: :controller  do
         params.required :key_3, type: :array
 
         params.required :key_4, type: :array, elements: :hash do |key_4|
-          key_4.required :key_4__1, as: new_name
+          key_4.required :key_4__1
           key_4.required :key_4__2
         end
 
@@ -120,7 +119,24 @@ RSpec.describe ApplicationController, type: :controller  do
     end
 
     context "when 'as' option is set for a parameter" do
-      let(:new_name) { :rename_key_4__1 }
+      let(:define_params) do
+        lambda do |params|
+          params.required :key_1
+          params.required :key_2, type: :hash
+          params.required :key_3, type: :array
+
+          params.required :key_4, type: :array, elements: :hash do |key_4|
+            key_4.required :key_4__1, as: :rename_key_4__1
+            key_4.required :key_4__2
+          end
+
+          params.required :key_5, type: :hash do |key_5|
+            key_5.required :key_5__1
+            key_5.required :key_5__2
+            key_5.required :key_5__3
+          end
+        end
+      end
 
       before do
         expected_params[:key_4].map! do |value|

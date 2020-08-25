@@ -208,7 +208,7 @@ module RequestParamsValidation
 
         request = Request.new
 
-        block.call(request) if block_given?
+        request.instance_eval(&block) if block_given?
 
         request.params
       end

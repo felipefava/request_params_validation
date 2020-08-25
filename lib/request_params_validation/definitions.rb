@@ -16,7 +16,7 @@ module RequestParamsValidation
       resource_name = resource_name_from_block(&block)
       resource = Resource.new(resource_name)
 
-      block.call(resource)
+      resource.instance_eval(&block)
 
       @@definitions[resource_name] = resource
     end

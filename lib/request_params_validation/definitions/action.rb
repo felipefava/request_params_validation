@@ -9,11 +9,11 @@ module RequestParamsValidation
         @name = name
       end
 
-      def request
+      def request(&block)
         if block_given?
           @request = Request.new
 
-          yield @request
+          @request.instance_eval(&block)
         else
           @request
         end

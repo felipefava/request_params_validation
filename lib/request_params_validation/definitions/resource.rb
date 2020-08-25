@@ -11,16 +11,16 @@ module RequestParamsValidation
         @actions = {}
       end
 
-      def action(action_name)
+      def action(action_name, &block)
         unless block_given?
           raise DefinitionArgumentError.new("Expecting block for action '#{action_name}'")
         end
 
-        action_definition = Action.new(action_name.to_s)
+        action = Action.new(action_name.to_s)
 
-        yield action_definition
+        action.instance_eval(&block)
 
-        @actions[action_name.to_s] = action_definition
+        @actions[action_name.to_s] = action
       rescue DefinitionArgumentError => e
         e.resource = name
         raise

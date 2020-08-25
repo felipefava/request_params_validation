@@ -45,7 +45,7 @@ documentation and allows to keep controllers code clean, ensuring that `params` 
 always have the parameters you suppose to receive.
 
 The default path for the definitions files is `app/definitions`, and their names should be the same
-as their respective controller's name, but ending with the suffix `_definition`. They also should
+as their respective controller's name, but ending with the suffix `_definition`. They should also
 respect the folder structure of the controllers folder. Please see the following project structure
 to clarify the idea:
 
@@ -113,25 +113,25 @@ Then, we will need to create the definition for the `users` resource:
 ```ruby
 # app/definitions/users_definition.rb
 
-RequestParamsValidation.define do |users|
-  users.action :create do |create|
-    create.request do |params|
-      params.required :user, type: :hash do |user|
-        user.required :first_name, type: :string
-        user.required :last_name, type: :string
-        user.required :emails, type: :array, elements: :email
-        user.required :birth_date,
-                      type: :datetime,
-                      validate: lambda { |value| value <= 18.years.ago.to_date }
+RequestParamsValidation.define do
+  action :create do
+    request do
+      required :user, type: :hash do
+        required :first_name, type: :string
+        required :last_name, type: :string
+        required :emails, type: :array, elements: :email
+        required :birth_date,
+                 type: :datetime,
+                 validate: lambda { |value| value <= 18.years.ago.to_date }
       end
     end
   end
 
-  users.action :notify do |notify|
-    notify.request do |params|
-      params.required :user_id, type: :integer
-      params.required :message, type: :string, length: { min: 10, max: 250 }
-      params.optional :by, inclusion: %w(email text_msg push), default: :email
+  action :notify do
+    request do
+      required :user_id, type: :integer
+      required :message, type: :string, length: { min: 10, max: 250 }
+      optional :by, inclusion: %w(email text_msg push), default: :email
     end
   end
 end
@@ -171,10 +171,10 @@ param. Otherwise use the `optional` method. For default, required parameters don
 values, if you would like to allow them for that parameter, you can use the option `allow_blank`
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1
-  params.required :key_2, allow_blank: true
-  params.optional :key_3
+request do
+  required :key_1
+  required :key_2, allow_blank: true
+  optional :key_3
 end
 ```
 
@@ -201,9 +201,9 @@ configuration option `extend.types`. See [here](#configuration) all globals
 configuration options.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :boolean
-  params.required :key_2, type: :decimal
+request do
+  required :key_1, type: :boolean
+  required :key_2, type: :decimal
   # ...
 end
 ```
@@ -216,14 +216,14 @@ If no block is passed, the gem will only check that the value of the parameter b
 object, without validating the content of it.
 
 ```ruby
-some_action.request do |params|
+request do
   # Allows any keys and values for the hash
-  params.required :key_1, type: :hash
+  required :key_1, type: :hash
 
   # Only allows the keys nested_key_1 and nested_key_2
-  params.required :key_2, type: :hash do |key_name|
-    key_name.required :nested_key_1, type: :string
-    key_name.required :nested_key_2, type: :integer
+  required :key_2, type: :hash do
+    required :nested_key_1, type: :string
+    required :nested_key_2, type: :integer
   end
 end
 ```
@@ -237,20 +237,20 @@ The value for this option can be a type or a hash. `elements: :integer` is equiv
 `elements: { type: :integer }`.
 
 The second way is useful when you  want to validate other things of the elements than just the
-type. The option elements accepts all validations options.
+type. The option `elements` accepts all validations options.
 
 ```ruby
-some_action.request do |params|
+request do
   # Allows any value for the elements of the array
-  params.required :key_1, type: :array
+  required :key_1, type: :array
 
   # Only allows decimals with a value less than 1_000 for the elements of the array
-  params.required :key_2, type: :array, elements: { type: :decimal, value: { max: 1_000 } }
+  required :key_2, type: :array, elements: { type: :decimal, value: { max: 1_000 } }
 
   # Only allows objects with a required key 'nested_key' of type 'email' for the
   # elements of the array
-  params.required :key_3, type: :array, elements: :hash do |key_3|
-    key_3.required :nested_key, type: :email
+  required :key_3, type: :array, elements: :hash do
+    required :nested_key, type: :email
   end
 end
 ```
@@ -262,7 +262,7 @@ Any value is a valid string.
 Accepts only valid integers like `5` or `"5"`.
 
 #### Decimal type
-Accepts only valid decimals like `5` or `1.5` or `10.45`. With decimals parameters you can use
+Accepts only valid decimals like `5` or `"1.5"` or `10.45`. With decimals parameters you can use
 the option `precision`. Go [here](#precision) for more details about this option.
 
 #### Boolean type
@@ -297,9 +297,9 @@ Notice that if no format is specified, the date will be validated using the ruby
 method.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :date
-  params.required :key_2, type: :date, format: '%Y-%m-%e'
+request do
+  required :key_1, type: :date
+  required :key_2, type: :date, format: '%Y-%m-%e'
 end
 ```
 
@@ -320,9 +320,9 @@ Besides from the `in` option, you can also use the `message` option for passing 
 detail when the parameter is not valid.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :string, inclusion: %w(asc desc)
-  params.required :key_2,
+request do
+  required :key_1, type: :string, inclusion: %w(asc desc)
+  required :key_2,
                   type: :string,
                   inclusion: { in: %w(s m l), message: 'Value is not a valid size' }
 end
@@ -338,12 +338,11 @@ Besides from the `min` and `max` options, you can also use the `message` option 
 custom error detail when the parameter is not valid.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :string, length: 10
-  params.required :key_2, type: :string, length: { min: 5, max: 12 }
-  params.required :key_3, type: :array, elements: :email, length: { max: 3 }
-  params.required :key_4, type: :string, length: { max: 25,
-                                                   message: '25 characters is the maximum allowed' }
+request do
+  required :key_1, type: :string, length: 10
+  required :key_2, type: :string, length: { min: 5, max: 12 }
+  required :key_3, type: :array, elements: :email, length: { max: 3 }
+  required :key_4, type: :string, length: { max: 25, message: '25 characters is the maximum allowed' }
 end
 ```
 
@@ -353,15 +352,15 @@ The `value` option is for validating the value size of numerics parameters.
 The value for this option is a hash with the following options: `min`, `max` and `message`.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :integer, value: { min: 0 }
-  params.required :key_2, type: :integer, value: { max: 1_000_000, message: 'Value too big!' }
-  params.required :key_3, type: :decimal, value: { min: 0, max: 1 }
+request do
+  required :key_1, type: :integer, value: { min: 0 }
+  required :key_2, type: :integer, value: { max: 1_000_000, message: 'Value too big!' }
+  required :key_3, type: :decimal, value: { min: 0, max: 1 }
 end
 ```
 
 ### Format
-The `format` option allows to validate de format of the value with a regular expression.
+The `format` option allows to validate the format of the value with a regular expression.
 
 The value for this option is a `regexp`, `string` or a `hash`. The string value is only valid
 when the type is a `date` or a `datetime`. Otherwise, you should use a regexp. The options for
@@ -372,10 +371,10 @@ So, for `date` and `datetime` types, `format: '%u%F'` is equivalent to
 equivalent to `format: { regexp: /^5[1-5]\d{14}$/ }`.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :string, format: /^5[1-5]\d{14}$/
-  params.required :key_2, type: :string, format: { regexp: /^1.*/,
-                                                   message: 'Value should start with a 1' }
+request do
+  required :key_1, type: :string, format: /^5[1-5]\d{14}$/
+  required :key_2, type: :string, format: { regexp: /^1.*/,
+                                            message: 'Value should start with a 1' }
 end
 ```
 
@@ -388,9 +387,9 @@ This option accepts a Proc as value or a hash. For example,
 also accepts the `message` option.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :date, validate: { function: lambda { |value| value >= Date.today },
-                                                   message: 'The date can not be in the past' }
+request do
+  required :key_1, type: :date, validate: { function: lambda { |value| value >= Date.today },
+                                            message: 'The date can not be in the past' }
 end
 ```
 
@@ -407,8 +406,8 @@ for all globals configuration options.
 This option accepts an integer as value.
 
 ```ruby
-some_action.request do |params|
-  params.required :key_1, type: :decimal, precision: 2
+request do
+  required :key_1, type: :decimal, precision: 2
 end
 ```
 
@@ -419,9 +418,9 @@ present.
 The value for the option `default` could be anything, including a proc.
 
 ```ruby
-some_action.request do |params|
-  params.optional :key_1, type: :string, default: 'Jane'
-  params.optional :key_2, type: :string, default: lambda { Date.today.strftime('%A') }
+request do
+  optional :key_1, type: :string, default: 'Jane'
+  optional :key_2, type: :string, default: lambda { Date.today.strftime('%A') }
 end
 ```
 
@@ -435,12 +434,12 @@ specified in the definition. So, `transform: :strip` is equivalent to
 `transform: lambda { |value| value.strip }`.
 
 ```ruby
-some_action.request do |params|
-  params.optional :key_1, type: :string, transform: :strip
-  params.optional :key_2,
-                  type: :string,
-                  format: /^\d{3}-\d{3}-\d{3}$/,
-                  transform: lambda { |value| value.gsub(/-/, '') }
+request do
+  optional :key_1, type: :string, transform: :strip
+  optional :key_2,
+           type: :string,
+           format: /^\d{3}-\d{3}-\d{3}$/,
+           transform: lambda { |value| value.gsub(/-/, '') }
 end
 ```
 
@@ -448,8 +447,8 @@ end
 You can rename parameters using the `as` option.
 
 ```ruby
-some_action.request do |params|
-  params.required :email_address, type: :email, as: :email
+request do
+  required :email_address, type: :email, as: :email
 end
 ```
 
@@ -461,12 +460,12 @@ If you want to receive and validate a parameter only if another one is given, yo
 the `is_given` option.
 
 ```ruby
-some_action.request do |params|
-  params.optional :label, type: :string
-  params.required :description, type: :string, if_given: :label
+request do
+  optional :label, type: :string
+  required :description, type: :string, if_given: :label
   #...
-  params.required :card_type, inclusion: %w(credit_card debit_card)
-  params.required :ccv, if_given: { card_type: lambda { |value| value == 'credit_card' } }
+  required :card_type, inclusion: %w(credit_card debit_card)
+  required :ccv, if_given: { card_type: lambda { |value| value == 'credit_card' } }
 end
 ```
 
@@ -571,14 +570,6 @@ end
 
 To see a complete initializer file of the configuration with all the options and their description,
 please see [here](./examples/initializer.rb).
-
-## Future Work
-In the near future the plan is to continue adding features to the gem. Next incoming changes
-could be:
--   Add doc generation from the definitions
--   Add representations for DRY definitions
--   Add more options to the actions definitions
--   Add handler for responses
 
 ## Acknowledgments
 This gem is strongly inspired in a Ruby framework named [Angus](https://github.com/moove-it/angus)
